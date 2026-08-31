@@ -1,9 +1,9 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import CurrentAccountTransactionsPage from "@/components/finance/current-account-transactions-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Tahsilatlar | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function TahsilatlarPage() {
-  return <ComingSoonModule title="Tahsilatlar" />;
+export default async function TahsilatlarPage() {
+  await requireStaff();
+  return <CurrentAccountTransactionsPage />;
 }

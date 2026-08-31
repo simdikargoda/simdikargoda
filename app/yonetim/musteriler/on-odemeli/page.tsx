@@ -1,9 +1,15 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import CustomerListPage from "@/components/customers/customer-list-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Ön Ödemeli Müşteriler | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function ndemeliMterilerPage() {
-  return <ComingSoonModule title="Ön Ödemeli Müşteriler" />;
+export default async function OnOdemeliMusterilerPage() {
+  await requireStaff();
+  return (
+    <CustomerListPage
+      title="Ön Ödemeli Müşteriler"
+      description="Bakiyeli (ön ödemeli) çalışma modelindeki müşteriler"
+      type="balance"
+    />
+  );
 }

@@ -16,7 +16,7 @@ export default function NotFound() {
       <div className="mt-8">
         <Link
           href="/"
-          className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-8 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-primary/90"
+          className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-8 text-sm font-medium text-white shadow-soft transition-colors hover:bg-primary/90"
         >
           Anasayfaya Dön
         </Link>

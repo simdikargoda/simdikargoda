@@ -47,3 +47,13 @@ export async function sendShipmentCreatedSms(input: {
     }
   );
 }
+
+/** Tüm SMS mesajlarını listeler (personel görünümü). */
+export async function listSmsMessages(limit = 100) {
+  const { getDb } = await import("@/db/client");
+  const db = getDb();
+  return db.query.smsMessages.findMany({
+    orderBy: (t, { desc }) => [desc(t.createdAt)],
+    limit,
+  });
+}

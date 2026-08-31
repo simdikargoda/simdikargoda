@@ -1,7 +1,8 @@
 "use client";
+import Link from "next/link";
 
 import { PageHeader } from "@/components/ui/page-header";
-import { Plug, ShoppingBag, MessageSquare, CreditCard, CheckCircle2, Settings2, XCircle } from "lucide-react";
+import { Plug, ShoppingBag, MessageSquare, CreditCard, CheckCircle2, Settings2, XCircle, Github, CloudUpload, Database } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const INTEGRATIONS = [
@@ -11,6 +12,9 @@ const INTEGRATIONS = [
   { id: "stripe", name: "Stripe", type: "Ödeme Geçidi", status: "inactive", icon: CreditCard, color: "bg-indigo-500" },
   { id: "iyzico", name: "Iyzico", type: "Ödeme Geçidi", status: "error", icon: CreditCard, color: "bg-blue-500" },
   { id: "amazon", name: "Amazon", type: "Pazaryeri", status: "inactive", icon: ShoppingBag, color: "bg-slate-800" },
+  { id: "github", name: "GitHub", type: "Kod ve Yedekleme", status: "active", icon: Github, color: "bg-neutral-900" },
+  { id: "vercel", name: "Vercel", type: "Dağıtım ve Sunucu", status: "active", icon: CloudUpload, color: "bg-black" },
+  { id: "supabase", name: "Supabase", type: "Veritabanı ve Backend", status: "active", icon: Database, color: "bg-emerald-600" },
 ];
 
 export default function EntegrasyonlarPage() {
@@ -51,7 +55,7 @@ export default function EntegrasyonlarPage() {
             
             <div className="mt-5 flex items-center justify-between border-t border-panel-secondary pt-4 text-xs text-muted">
               <span>{integration.type}</span>
-              <span className="font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">Yapılandır &rarr;</span>
+              <Link href={`/yonetim/entegrasyonlar/${integration.id}`} className="font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100 hover:underline">Yapılandır &rarr;</Link>
             </div>
           </div>
         ))}

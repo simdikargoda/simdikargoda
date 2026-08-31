@@ -1,42 +1,25 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Bell, Search, LogOut, PanelLeftClose, PanelLeftOpen, CheckCircle2, AlertTriangle, UserPlus, X, User, Menu } from "lucide-react";
+import { LogOut, PanelLeftClose, PanelLeftOpen, Search, Menu } from "lucide-react";
 
 import { logoutAction } from "@/app/(auth)/cikis/actions";
 import { useSidebar } from "@/components/layout/sidebar-layout";
-import { cn } from "@/lib/cn";
 
-const MOCK_NOTIFICATIONS: any[] = [];
-
-/** Premium yönetim paneli header — arama çubuğu, bildirim ve çıkış eklendi. */
+/**
+ * Yönetim paneli header. Bildirim zili, gerçek bir notification domain
+ * olmadığı için kaldırılmıştır (fake boş sistem bırakılmaz). Arama çubuğu
+ * global arama sayfasına yönlendirir.
+ */
 export function PanelHeader({ user }: { user?: any }) {
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse, setMobileOpen } = useSidebar();
-  
-  const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const notifRef = useRef<HTMLDivElement>(null);
-
-  // Dışarı tıklayınca bildirimi kapat
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
-        setIsNotifOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const unreadCount = MOCK_NOTIFICATIONS.filter(n => !n.read).length;
+  void pathname;
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-panel-secondary bg-white/80 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
-      
       {/* Sol Kısım: Menü Toggle & Arama Çubuğu */}
       <div className="flex-1 max-w-2xl w-full flex items-center">
-        {/* Masaüstü Sidebar Aç/Kapa */}
         <button
           onClick={toggleCollapse}
           className="hidden lg:flex items-center justify-center h-[38px] w-11 rounded-l-2xl border border-r-0 border-panel-secondary bg-panel-secondary/30 text-muted hover:bg-panel-secondary hover:text-foreground transition-colors shrink-0"
@@ -44,8 +27,7 @@ export function PanelHeader({ user }: { user?: any }) {
         >
           {isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
         </button>
-        
-        {/* Mobil Sidebar Aç */}
+
         <button
           onClick={() => setMobileOpen(true)}
           className="lg:hidden flex items-center justify-center h-[38px] w-11 rounded-l-2xl border border-r-0 border-panel-secondary bg-panel-secondary/30 text-muted hover:bg-panel-secondary hover:text-foreground transition-colors shrink-0"
@@ -70,80 +52,6 @@ export function PanelHeader({ user }: { user?: any }) {
 
       {/* Sağ aksiyonlar */}
       <div className="flex shrink-0 items-center gap-3 justify-end">
-        
-        {/* Bildirim Dropdown */}
-        <div className="relative" ref={notifRef}>
-          <button
-            onClick={() => setIsNotifOpen(!isNotifOpen)}
-            aria-label="Bildirimler"
-            className={cn(
-              "relative flex h-9 w-9 items-center justify-center rounded-xl border border-panel-secondary transition-colors",
-              isNotifOpen ? "bg-panel-secondary text-foreground" : "text-muted hover:bg-panel-secondary hover:text-foreground"
-            )}
-          >
-            <Bell className="h-4 w-4" />
-            {unreadCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white border-2 border-white">
-                {unreadCount}
-              </span>
-            )}
-          </button>
-
-          {isNotifOpen && (
-            <div className="absolute right-0 mt-2 w-80 origin-top-right rounded-2xl border border-panel-secondary bg-white shadow-xl focus:outline-none animate-in slide-in-from-top-2 duration-200">
-              <div className="flex items-center justify-between border-b border-panel-secondary px-4 py-3">
-                <h3 className="text-sm font-semibold text-foreground">Bildirimler</h3>
-                <button className="text-xs font-medium text-primary hover:underline">
-                  Tümünü Okundu İşaretle
-                </button>
-              </div>
-              <div className="max-h-[300px] overflow-y-auto">
-                {MOCK_NOTIFICATIONS.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-10 text-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-panel-secondary/50 text-muted mb-3">
-                      <Bell className="h-5 w-5" />
-                    </div>
-                    <p className="text-sm font-medium text-foreground">Bildirim Bulunmuyor</p>
-                    <p className="text-xs text-muted mt-1">Sistem tarafından gönderilen yeni<br/>bir bildiriminiz yok.</p>
-                  </div>
-                ) : (
-                  MOCK_NOTIFICATIONS.map((notif) => (
-                    <div key={notif.id} className={cn(
-                      "flex gap-3 px-4 py-3 transition-colors hover:bg-panel-secondary/50",
-                      !notif.read && "bg-primary/[0.02]"
-                    )}>
-                      <div className="mt-0.5 shrink-0">
-                        {notif.type === "success" && <CheckCircle2 className="h-4 w-4 text-success" />}
-                        {notif.type === "warning" && <AlertTriangle className="h-4 w-4 text-warning" />}
-                        {notif.type === "info" && <UserPlus className="h-4 w-4 text-primary" />}
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <p className={cn("text-sm font-medium leading-none text-foreground", !notif.read && "font-semibold")}>
-                          {notif.title}
-                        </p>
-                        <p className="text-xs text-muted line-clamp-2">
-                          {notif.message}
-                        </p>
-                        <p className="text-[10px] text-muted/80 pt-1">
-                          {notif.time}
-                        </p>
-                      </div>
-                      {!notif.read && (
-                        <div className="shrink-0 pt-1">
-                          <span className="block h-2 w-2 rounded-full bg-primary" />
-                        </div>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-              <div className="border-t border-panel-secondary p-2 text-center text-xs">
-                <button className="font-medium text-muted hover:text-foreground">Tüm Bildirimleri Gör</button>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* Profil butonu */}
         <a
           href="/profil"
@@ -154,7 +62,7 @@ export function PanelHeader({ user }: { user?: any }) {
             <img src={user.avatarUrl} alt={user?.name} className="h-6 w-6 rounded-full object-cover shrink-0 border border-panel-secondary" />
           ) : (
             <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
-              {user?.name ? user.name.split(" ")[0][0].toUpperCase() + (user.name.split(" ")[1] ? user.name.split(" ")[1][0].toUpperCase() : "") : "US"}
+              {user?.name ? user.name.split(" ")[0][0].toUpperCase() : "US"}
             </div>
           )}
           <span className="hidden sm:inline-block font-semibold">

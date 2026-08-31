@@ -1,23 +1,30 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { EmptyState } from "@/components/ui/empty-state";
-import { Tags } from "lucide-react";
+import { StatCard } from "@/components/ui/stat-card";
+import { getPricingOverview } from "@/lib/services/pricing.service";
+import PricingClient from "./pricing-client";
 
 export const dynamic = "force-dynamic";
 
-export default function FiyatlandirmaPage() {
+/** Fiyatlandırma genel görünümü: aktif fiyatlar + fiyat geçmişi. */
+export default async function PricingPage() {
+  const { prices, history } = await getPricingOverview();
+
+  const activeCount = prices.filter((p) => p.isActive).length;
+
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader
-        title="Fiyatlandırma"
-        description="Müşterilere ve kargo firmalarına özel fiyat tarifelerini yönetin."
+        title="Fiyat Listesi"
+        description="Müşteri ve kargo firması bazlı satış/maliyet tarifeleri"
       />
-      <div className="mt-4">
-        <EmptyState
-          icon={Tags}
-          title="Fiyat Listesi Yapılandırılıyor"
-          description="Kargo firmalarına özel fiyat şablonları ve müşteri atamaları çok yakında eklenecek."
-        />
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard label="Aktif Fiyat" value={String(activeCount)} />
+        <StatCard label="Toplam Fiyat" value={String(prices.length)} />
+        <StatCard label="Tarihsel Değişim" value={String(history.length)} />
       </div>
+
+      <PricingClient initialPrices={prices} initialHistory={history} />
     </div>
   );
 }

@@ -1,9 +1,14 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import AuditLogsPage from "@/components/audit/audit-logs-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "İşlem Logları | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function lemLoglarPage() {
-  return <ComingSoonModule title="İşlem Logları" />;
+export default async function IslemLoglarPage() {
+  await requireStaff();
+  return (
+    <AuditLogsPage
+      title="İşlem Logları"
+      description="Kritik yönetim işlemlerinin audit geçmişi"
+    />
+  );
 }

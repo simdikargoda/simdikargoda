@@ -1,6 +1,5 @@
 import "server-only";
 
-import { isIntegrationConfigured } from "@/lib/config";
 import { cargoProviderEnum } from "@/db/schema/shipment";
 
 /**

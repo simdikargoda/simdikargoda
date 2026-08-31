@@ -1,9 +1,15 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import ShipmentListPage from "@/components/shipments/shipment-list-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Bekleyenler | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function BekleyenlerPage() {
-  return <ComingSoonModule title="Bekleyenler" />;
+export default async function BekleyenlerPage() {
+  await requireStaff();
+  return (
+    <ShipmentListPage
+      title="Bekleyenler"
+      description="İşlem bekleyen gönderiler"
+      status="pending"
+    />
+  );
 }

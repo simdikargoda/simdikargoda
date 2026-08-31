@@ -1,9 +1,14 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Mesaj Şablonları | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function MesajablonlarPage() {
-  return <ComingSoonModule title="Mesaj Şablonları" />;
+/**
+ * Mesaj şablonları: Sistem şu anda sabit şablon kullanır (kargo oluşturma
+ * SMS'i). Kullanıcı tanımlı template CRUD'u scope dışıdır; duplicate bir
+ * şablon yönetimi üretilmez. Bu rota SMS gönderimlerine yönlendirilir.
+ */
+export default async function MesajSablonlarPage() {
+  await requireStaff();
+  redirect("/yonetim/bildirimler/sms");
 }

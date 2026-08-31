@@ -1,9 +1,15 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import ShipmentListPage from "@/components/shipments/shipment-list-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Kargoya Aktarılmayanlar | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function KargoyaAktarlmayanlarPage() {
-  return <ComingSoonModule title="Kargoya Aktarılmayanlar" />;
+export default async function KargoyaAktarilmayanlarPage() {
+  await requireStaff();
+  return (
+    <ShipmentListPage
+      title="Kargoya Aktarılmayanlar"
+      description="Oluşturulmuş fakat henüz kargo firmasına aktarılmamış gönderiler"
+      status="created"
+    />
+  );
 }

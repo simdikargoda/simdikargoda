@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ArrowLeft, Inbox, Plus, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
@@ -13,6 +13,8 @@ export function ComingSoonModule({
   description?: string;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const isNewPage = pathname?.endsWith("/yeni");
 
   return (
     <div className="space-y-6 fade-in-up pb-12 h-full flex flex-col">
@@ -43,19 +45,18 @@ export function ComingSoonModule({
           </p>
           
           <div className="flex flex-col sm:flex-row items-center gap-3">
+            {!isNewPage && (
+              <button
+                onClick={() => router.push(`${pathname}/yeni`)}
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-soft transition-transform hover:scale-105 hover:bg-primary-strong focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <Plus className="h-4 w-4" />
+                Yeni Kayıt Ekle
+              </button>
+            )}
             <button
               onClick={() => {
-                toast.info("İşlem Başarısız", {
-                  description: "Bu modüle veri ekleme yetkiniz bulunmuyor veya özellik sınırlandırılmış.",
-                });
-              }}
-              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-soft transition-transform hover:scale-105 hover:bg-primary-strong focus:outline-none focus:ring-2 focus:ring-primary/50"
-            >
-              <Plus className="h-4 w-4" />
-              Yeni Kayıt Ekle
-            </button>
-            <button
-              onClick={() => {
+                router.refresh();
                 toast("Tablo güncelleniyor...", {
                   description: "Güncel veriler sunucudan kontrol edildi. Herhangi bir değişiklik yok.",
                   icon: <RefreshCcw className="h-4 w-4 animate-spin" />,

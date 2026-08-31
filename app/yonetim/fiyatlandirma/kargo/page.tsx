@@ -1,9 +1,9 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Kargo Firması Tarifeleri | Şimdi Kargoda",
-};
-
-export default function KargoFirmasTarifeleriPage() {
-  return <ComingSoonModule title="Kargo Firması Tarifeleri" />;
+/**
+ * Kargo firması tarifeleri, genel fiyatlandırma özetinde kargo firması
+ * bazlı satırlarla sunulur. Ayrı ekran oluşturulmaz.
+ */
+export default async function KargoFirmasiTarifeleriPage() {
+  redirect("/yonetim/fiyatlandirma");
 }

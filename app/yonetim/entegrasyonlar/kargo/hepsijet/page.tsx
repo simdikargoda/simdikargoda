@@ -1,9 +1,10 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "HepsiJET | Şimdi Kargoda",
-};
-
-export default function HepsiJETPage() {
-  return <ComingSoonModule title="HepsiJET" />;
+/**
+ * HepsiJET detayı genel kargo entegrasyonları ekranından izlenir.
+ * Resmi API dokümanı temin edilene kadar gerçek konfigürasyon formu
+ * scope dışıdır.
+ */
+export default async function HepsiJetPage() {
+  redirect("/yonetim/entegrasyonlar/kargo");
 }

@@ -210,12 +210,17 @@ export async function createShipment(input: CreateShipmentInput) {
     return shipment;
   });
 
-  // SMS Bildirimi (Fire and forget - İşlemi bloklamaz)
-  const { sendSms } = await import("@/lib/providers/sms/netgsm");
-  sendSms({
-    phone: result.receiverPhone,
-    message: `Sayin ${result.receiverName}, kargonuz ${input.provider.toUpperCase()} firmasina verilmistir. Takip No: ${result.trackingNumber}`,
-  }).catch((err) => console.error("SMS gönderim hatasi:", err));
+  // SMS Bildirimi (Fire and forget - İşlemi bloklamaz, gerçek Netgsm servisi)
+  const smsLog = await import("@/lib/services/notifications/sms-log.service");
+  smsLog
+    .sendShipmentCreatedSms({
+      toPhone: result.receiverPhone,
+      trackingNumber: result.trackingNumber ?? result.id,
+      customerId: input.customerId,
+    })
+    .catch((err: unknown) =>
+      console.error("SMS gönderim hatası:", err instanceof Error ? err.message : err)
+    );
 
   return result;
 }

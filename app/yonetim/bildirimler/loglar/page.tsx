@@ -1,9 +1,14 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import SmsLogsListPage from "@/components/notifications/sms-logs-list-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "SMS Logları | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function SMSLoglarPage() {
-  return <ComingSoonModule title="SMS Logları" />;
+export default async function SmsLoglarPage() {
+  await requireStaff();
+  return (
+    <SmsLogsListPage
+      title="SMS Logları"
+      description="Tüm SMS gönderim kayıtlarının geçmişi"
+    />
+  );
 }

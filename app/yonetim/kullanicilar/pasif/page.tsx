@@ -1,9 +1,13 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import UsersListPage from "@/components/users/users-list-page";
 
-export const metadata = {
-  title: "Pasif Kullanıcılar | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function PasifKullanclarPage() {
-  return <ComingSoonModule title="Pasif Kullanıcılar" />;
+export default async function PasifKullanicilarPage() {
+  return (
+    <UsersListPage
+      title="Pasif Kullanıcılar"
+      description="Pasif duruma alınmış sistem kullanıcıları"
+      status="passive"
+    />
+  );
 }

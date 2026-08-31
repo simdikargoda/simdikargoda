@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
-import { Search } from "lucide-react";
+import { useActionState, useTransition } from "react";
+import { Search, Edit, Trash2 } from "lucide-react";
+import { deleteCustomerAction } from "./actions";
 
 import type { customers } from "@/db/schema/customer";
 import type { StatusBadgeColor } from "@/components/ui/status-badge";
@@ -95,6 +96,7 @@ export function CustomersTable({
               <th className="px-4 py-3 font-medium">Tip</th>
               <th className="px-4 py-3 font-medium">Durum</th>
               <th className="px-4 py-3 text-right font-medium">Oluşturulma</th>
+              <th className="px-4 py-3 text-right font-medium">İşlemler</th>
             </tr>
           </thead>
           <tbody>
@@ -127,6 +129,18 @@ export function CustomersTable({
                   <td className="px-4 py-3 text-right text-muted">
                     {new Date(c.createdAt).toLocaleDateString("tr-TR")}
                   </td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Link
+                        href={`/yonetim/musteriler/${c.id}`}
+                        className="p-1.5 text-muted hover:text-primary transition-colors rounded-lg hover:bg-panel-secondary"
+                        title="Düzenle"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Link>
+                      <DeleteCustomerForm customerId={c.id} />
+                    </div>
+                  </td>
                 </tr>
               );
             })}
@@ -149,5 +163,30 @@ export function CustomersTable({
         </div>
       ) : null}
     </div>
+  );
+}
+
+function DeleteCustomerForm({ customerId }: { customerId: string }) {
+  const [state, formAction, pending] = useActionState(deleteCustomerAction, {});
+
+  return (
+    <form
+      action={formAction}
+      onSubmit={(e) => {
+        if (!confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) {
+          e.preventDefault();
+        }
+      }}
+    >
+      <input type="hidden" name="customerId" value={customerId} />
+      <button
+        type="submit"
+        disabled={pending}
+        title="Sil"
+        className="p-1.5 text-muted hover:text-red-500 transition-colors rounded-lg hover:bg-red-50 disabled:opacity-50"
+      >
+        <Trash2 className="h-4 w-4" />
+      </button>
+    </form>
   );
 }

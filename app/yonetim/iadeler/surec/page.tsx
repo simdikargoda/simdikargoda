@@ -1,9 +1,15 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import ReturnsListPage from "@/components/returns/returns-list-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "İade Sürecindekiler | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function adeSrecindekilerPage() {
-  return <ComingSoonModule title="İade Sürecindekiler" />;
+export default async function IadeSurecindekilerPage() {
+  await requireStaff();
+  return (
+    <ReturnsListPage
+      title="İade Sürecindekiler"
+      description="İade süreci devam eden gönderiler"
+      status="returned"
+    />
+  );
 }

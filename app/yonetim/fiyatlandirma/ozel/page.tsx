@@ -1,9 +1,10 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Müşteriye Özel Fiyatlar | Şimdi Kargoda",
-};
-
-export default function MteriyezelFiyatlarPage() {
-  return <ComingSoonModule title="Müşteriye Özel Fiyatlar" />;
+/**
+ * Müşteriye özel fiyatlar, genel fiyatlandırma özetinde (fiyat listesi)
+ * müşteri bazlı satırlarla zaten sunulmaktadır. Ayrı bir ekran scope
+ * dışıdır; tek doğru veri kaynağına yönlendirilir.
+ */
+export default async function MusteriyeOzelFiyatlarPage() {
+  redirect("/yonetim/fiyatlandirma");
 }

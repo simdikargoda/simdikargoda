@@ -1,9 +1,10 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Yeni Fiyat Listesi | Şimdi Kargoda",
-};
-
-export default function YeniFiyatListesiPage() {
-  return <ComingSoonModule title="Yeni Fiyat Listesi" />;
+/**
+ * Yeni fiyat listesi oluşturma akışı; şablon oluşturma bu sürümde
+ * fiyat özet ekranı üzerinden yürütülür. Ayrı bir oluşturma formu
+ * scope dışı tutulmuştur; kopyalanmış ekran üretilmez.
+ */
+export default async function YeniFiyatListesiPage() {
+  redirect("/yonetim/fiyatlandirma");
 }

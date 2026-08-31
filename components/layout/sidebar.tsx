@@ -57,8 +57,6 @@ const NAV_SECTIONS = [
         children: [
           { href: "/yonetim/kargo/yeni", label: "Yeni Kargo Oluştur", icon: PackagePlus, exact: true },
           { href: "/yonetim/kargo/excel", label: "Excel ile Kargo Yükle", icon: FileUp, exact: true },
-          { href: "/yonetim/kargo/toplu", label: "Toplu Kargo Oluştur", icon: Boxes, exact: true },
-          { href: "/yonetim/kargo/taslak", label: "Taslak Gönderiler", icon: ScrollText, exact: true },
         ],
       },
       {
@@ -94,8 +92,6 @@ const NAV_SECTIONS = [
           { href: "/yonetim/raporlar/finansal", label: "Finansal Raporlar", icon: CreditCard, exact: true },
           { href: "/yonetim/raporlar/karlilik", label: "Kârlılık Raporları", icon: TrendingUp, exact: true },
           { href: "/yonetim/raporlar/musteri", label: "Müşteri Raporları", icon: Users, exact: true },
-          { href: "/yonetim/raporlar/firma", label: "Kargo Firması Raporları", icon: Truck, exact: true },
-          { href: "/yonetim/raporlar/iade", label: "İade Raporları", icon: RotateCcw, exact: true },
         ],
       },
     ],
@@ -108,7 +104,6 @@ const NAV_SECTIONS = [
         icon: Users,
         children: [
           { href: "/yonetim/musteriler", label: "Tüm Müşteriler", icon: Users, exact: true },
-          { href: "/yonetim/musteriler/yeni", label: "Yeni Müşteri Oluştur", icon: Plus, exact: true },
           { href: "/yonetim/musteriler/on-odemeli", label: "Ön Ödemeli Müşteriler", icon: CreditCard, exact: true },
           { href: "/yonetim/musteriler/cari", label: "Cari Müşteriler", icon: Calculator, exact: true },
           { href: "/yonetim/musteriler/pasif", label: "Pasif Müşteriler", icon: UserCog, exact: true },
@@ -119,10 +114,7 @@ const NAV_SECTIONS = [
         label: "Fiyat Listeleri",
         icon: Tags,
         children: [
-          { href: "/yonetim/fiyatlandirma", label: "Genel Fiyat Listeleri", icon: Tags, exact: true },
-          { href: "/yonetim/fiyatlandirma/ozel", label: "Müşteriye Özel Fiyatlar", icon: ShieldCheck, exact: true },
-          { href: "/yonetim/fiyatlandirma/kargo", label: "Kargo Firması Tarifeleri", icon: Truck, exact: true },
-          { href: "/yonetim/fiyatlandirma/yeni", label: "Yeni Fiyat Listesi", icon: Plus, exact: true },
+          { href: "/yonetim/fiyatlandirma", label: "Fiyat Listeleri", icon: Tags, exact: true },
         ],
       },
       {
@@ -178,7 +170,6 @@ const NAV_SECTIONS = [
         icon: Settings,
         children: [
           { href: "/yonetim/entegrasyonlar", label: "Tüm Entegrasyonlar", icon: Plug, exact: true },
-          { href: "/yonetim/entegrasyonlar/api", label: "API Ayarları", icon: Settings, exact: true },
           { href: "/yonetim/entegrasyonlar/webhook", label: "Webhooklar", icon: Plug, exact: true },
           { href: "/yonetim/entegrasyonlar/log", label: "Entegrasyon Logları", icon: ScrollText, exact: true },
         ],
@@ -195,7 +186,6 @@ const NAV_SECTIONS = [
           { href: "/yonetim/ayarlar", label: "Genel Ayarlar", icon: Settings, exact: true },
           { href: "/yonetim/ayarlar/firma", label: "Firma Bilgileri", icon: Users, exact: true },
           { href: "/yonetim/ayarlar/operasyon", label: "Operasyon Ayarları", icon: Truck, exact: true },
-          { href: "/yonetim/ayarlar/bildirim", label: "Bildirim Ayarları", icon: MessageSquareText, exact: true },
         ],
       },
       {
@@ -203,7 +193,6 @@ const NAV_SECTIONS = [
         icon: UserCog,
         children: [
           { href: "/yonetim/kullanicilar", label: "Tüm Kullanıcılar", icon: Users, exact: true },
-          { href: "/yonetim/kullanicilar/yeni", label: "Yeni Kullanıcı Oluştur", icon: Plus, exact: true },
           { href: "/yonetim/kullanicilar/aktif", label: "Aktif Kullanıcılar", icon: UserCog, exact: true },
           { href: "/yonetim/kullanicilar/pasif", label: "Pasif Kullanıcılar", icon: X, exact: true },
         ],
@@ -212,10 +201,7 @@ const NAV_SECTIONS = [
         label: "Roller & Yetkiler",
         icon: ShieldCheck,
         children: [
-          { href: "/yonetim/roller", label: "Roller", icon: ShieldCheck, exact: true },
-          { href: "/yonetim/roller/yeni", label: "Yeni Rol Oluştur", icon: Plus, exact: true },
-          { href: "/yonetim/roller/matris", label: "Yetki Matrisi", icon: LayoutDashboard, exact: true },
-          { href: "/yonetim/roller/atama", label: "Kullanıcı Rol Atamaları", icon: Users, exact: true },
+          { href: "/yonetim/roller", label: "Roller & Yetkiler", icon: ShieldCheck, exact: true },
         ],
       },
       {
@@ -225,8 +211,6 @@ const NAV_SECTIONS = [
           { href: "/yonetim/audit", label: "Audit Logları", icon: ScrollText, exact: true },
           { href: "/yonetim/audit/islem", label: "İşlem Logları", icon: FileText, exact: true },
           { href: "/yonetim/audit/entegrasyon", label: "Entegrasyon Logları", icon: Plug, exact: true },
-          { href: "/yonetim/audit/api", label: "API / Webhook Logları", icon: Settings, exact: true },
-          { href: "/yonetim/audit/hata", label: "Hata Logları", icon: X, exact: true },
         ],
       },
     ],

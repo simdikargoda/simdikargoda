@@ -3,9 +3,6 @@ import crypto from "crypto";
 
 import { authenticator } from "otplib";
 import QRCode from "qrcode";
-import { getDb } from "@/db/client";
-import { users } from "@/db/schema/auth";
-import { eq } from "drizzle-orm";
 
 /** Yeni bir 2FA gizli anahtarı üretir. */
 export function generateTwoFactorSecret() {
@@ -52,10 +49,9 @@ export function decryptSecret(encryptedSecret: string): string {
 
   const parts = encryptedSecret.split(":");
   if (parts.length !== 3) {
-    // Eski/şifrelenmemiş (plaintext) veri var demektir, backward compatibility (ya da doğrudan migration gerekir)
-    // Güvenlik gereği düz plaintext dönmesi istenmiyorsa hata verilebilir.
-    // Ancak master prompt "plaintext saklanmamalı" diyor.
-    return encryptedSecret; 
+    // Düzmetin (plaintext) saklanmış secret kabul edilmez.
+    // Production güvenliği: şifrelenmemiş veri olarak işlemek reddedilir.
+    throw new Error("MFA secret güvenli formatta (şifreli) kaydedilmemiş. Yeniden kurulum gerekir.");
   }
 
   const [ivBase64, authTagBase64, encryptedData] = parts;

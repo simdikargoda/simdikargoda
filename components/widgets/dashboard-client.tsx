@@ -395,14 +395,30 @@ export function DashboardClient({ data, initialRange = "Bugün", userName = "Kul
             <h3 className="font-semibold text-foreground">Aylık Ciro Trendi</h3>
             <CardDateFilter initialValue="6 Ay" options={["3 Ay", "6 Ay", "1 Yıl", "Tümü"]} />
           </div>
-          <div className="h-[200px] w-full">
+          <div className="h-[200px] w-full mt-2">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueTrend} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barSize={24}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748b' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748b' }} tickFormatter={(val) => `${val/1000}B`} />
-                <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} formatter={(value: number) => formatKurus(value)} />
-                <Bar dataKey="amountKurus" name="Ciro" fill="#60a5fa" radius={[4, 4, 0, 0]} />
+              <BarChart data={revenueTrend} margin={{ top: 10, right: 0, left: -20, bottom: 0 }} barSize={32}>
+                <defs>
+                  <linearGradient id="colorCiro" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.6} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#475569', fontWeight: 500 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#475569', fontWeight: 500 }} tickFormatter={(val) => `${val/1000}B`} />
+                <Tooltip 
+                  cursor={{ fill: '#f1f5f9', opacity: 0.5 }} 
+                  contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} 
+                  formatter={(value: number) => [formatKurus(value), "Ciro"]} 
+                />
+                <Bar 
+                  dataKey="amountKurus" 
+                  name="Ciro" 
+                  fill="url(#colorCiro)" 
+                  radius={[6, 6, 0, 0]} 
+                  minPointSize={8}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>

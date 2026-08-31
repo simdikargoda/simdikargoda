@@ -1,9 +1,10 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "DHL | Şimdi Kargoda",
-};
-
-export default function DHLPage() {
-  return <ComingSoonModule title="DHL" />;
+/**
+ * DHL detayı genel kargo entegrasyonları ekranından izlenir.
+ * Resmi API dokümanı temin edilene kadar gerçek konfigürasyon formu
+ * scope dışıdır.
+ */
+export default async function DhlPage() {
+  redirect("/yonetim/entegrasyonlar/kargo");
 }

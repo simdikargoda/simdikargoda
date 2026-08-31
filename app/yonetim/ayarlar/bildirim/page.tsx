@@ -1,9 +1,13 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Bildirim Ayarları | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function BildirimAyarlarPage() {
-  return <ComingSoonModule title="Bildirim Ayarları" />;
+/**
+ * Bildirim ayarları, /yonetim/bildirimler altında tekilleştirilmiştir.
+ * Bu rota duplicate yerine bildirim ekranına yönlendirilir.
+ */
+export default async function AyarlarBildirimPage() {
+  await requireStaff();
+  redirect("/yonetim/bildirimler/sms");
 }

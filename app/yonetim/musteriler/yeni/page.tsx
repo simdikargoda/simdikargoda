@@ -1,9 +1,13 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Yeni Müşteri Oluştur | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function YeniMteriOluturPage() {
-  return <ComingSoonModule title="Yeni Müşteri Oluştur" />;
+/**
+ * Yeni müşteri oluşturma, müşteri listesi üzerindeki modal ile yapılır
+ * (NewCustomerButton). Ayrı bir rota yerine listeye yönlendirir.
+ */
+export default async function YeniMusteriOlusturPage() {
+  await requireStaff();
+  redirect("/yonetim/musteriler");
 }

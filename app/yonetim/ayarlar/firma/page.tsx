@@ -1,9 +1,14 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import { redirect } from "next/navigation";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Firma Bilgileri | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function FirmaBilgileriPage() {
-  return <ComingSoonModule title="Firma Bilgileri" />;
+/**
+ * Firma bilgileri şu anda genel ayarlar ekranındaki entegrasyon durumu ile
+ * yönetilir; ayrı bir firma bilgi formu scope dışıdır (persisted settings
+ * modeli yok). Duplicate ekran üretilmez.
+ */
+export default async function FirmaBilgileriPage() {
+  await requireStaff();
+  redirect("/yonetim/ayarlar");
 }

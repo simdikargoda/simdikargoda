@@ -1,9 +1,15 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import BalanceTransactionsPage from "@/components/finance/balance-transactions-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Banka Transferleri | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function BankaTransferleriPage() {
-  return <ComingSoonModule title="Banka Transferleri" />;
+/**
+ * Banka transferleri (bakiye yükleme) akışı: Havale talepleri "Bekleyen
+ * Bakiye Yükleme Talepleri" bölümünden onaylanır; onay transaction-safe
+ * olarak bakiyeye eklenir. Otomatik başarı varsayılmaz. Bu ekran, tek gerçek
+ * veri kaynağı olan bakiye hareketleri görünümüne bağlanır.
+ */
+export default async function BankaTransferleriPage() {
+  await requireStaff();
+  return <BalanceTransactionsPage />;
 }

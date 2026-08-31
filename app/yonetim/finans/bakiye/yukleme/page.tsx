@@ -1,9 +1,14 @@
-import { ComingSoonModule } from "@/components/ui/coming-soon-module";
+import BalanceTransactionsPage from "@/components/finance/balance-transactions-page";
+import { requireStaff } from "@/lib/guard";
 
-export const metadata = {
-  title: "Bakiye Yükleme | Şimdi Kargoda",
-};
+export const dynamic = "force-dynamic";
 
-export default function BakiyeYklemePage() {
-  return <ComingSoonModule title="Bakiye Yükleme" />;
+/**
+ * Bakiye yükleme (havale) akışı: talep, hareketler ekranındaki "Bekleyen
+ * Bakiye Yükleme Talepleri" bölümünden yönetilir (gerçek onay, approval service);
+ * onaylanmadan bakiye aktifleşmez. Tekrar eden veri gösterilmez.
+ */
+export default async function BakiyeYuklemePage() {
+  await requireStaff();
+  return <BalanceTransactionsPage />;
 }

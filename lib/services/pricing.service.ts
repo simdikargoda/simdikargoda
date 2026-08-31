@@ -176,3 +176,40 @@ export async function listPriceChangeHistory(customerId: string) {
     orderBy: (t, { desc }) => [desc(t.changedAt)],
   });
 }
+
+/** Tüm fiyatları müşteri adlarıyla birlikte listeler. */
+export async function listAllPrices() {
+  const { getDb } = await import("@/db/client");
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(customerCargoPrices)
+    .leftJoin(customers, eq(customers.id, customerCargoPrices.customerId))
+    .orderBy(customerCargoPrices.createdAt);
+  return rows.map((r) => ({
+    ...r.customer_cargo_prices,
+    customerName: r.customers?.name ?? null,
+  }));
+}
+
+/** Tüm fiyat değişim geçmişini müşteri adlarıyla birlikte listeler. */
+export async function listAllPriceHistory() {
+  const { getDb } = await import("@/db/client");
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(priceChangeAudit)
+    .leftJoin(customers, eq(customers.id, priceChangeAudit.customerId))
+    .orderBy(priceChangeAudit.changedAt);
+  return rows.map((r) => ({
+    ...r.price_change_audit,
+    customerName: r.customers?.name ?? null,
+  }));
+}
+
+/** Fiyatlandırma genel görünümü için özet veriler. */
+export async function getPricingOverview() {
+  const prices = await listAllPrices();
+  const history = await listAllPriceHistory();
+  return { prices, history };
+}
