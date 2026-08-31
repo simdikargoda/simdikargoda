@@ -1,0 +1,272 @@
+import { redirect } from "next/navigation";
+import { User, ShieldCheck, Mail, Clock, Key, MonitorSmartphone, Camera, Trash2, CalendarDays } from "lucide-react";
+import { requireAuth } from "@/lib/guard";
+import { getDb } from "@/db/client";
+import { users, sessions } from "@/db/schema/auth";
+import { eq, desc } from "drizzle-orm";
+import { formatDistanceToNow, format } from "date-fns";
+import { tr } from "date-fns/locale";
+import { cookies } from "next/headers";
+import { SESSION_COOKIE } from "@/lib/auth";
+import crypto from "crypto";
+
+import { SessionsList } from "./oturumlar/sessions-list";
+import { SecurityForms } from "./guvenlik/security-forms";
+import Link from "next/link";
+import { generateTwoFactorSecret, generateQrCodeUrl } from "@/lib/2fa";
+
+export const dynamic = "force-dynamic";
+
+export default async function ProfilePage() {
+  const sessionPayload = await requireAuth();
+
+  const db = getDb();
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, sessionPayload.userId),
+  });
+
+  if (!user) {
+    redirect("/giris");
+  }
+
+  // Oturumları çek
+  const userSessions = await db.query.sessions.findMany({
+    where: eq(sessions.userId, sessionPayload.userId),
+    orderBy: [desc(sessions.createdAt)],
+  });
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  let currentSessionId = null;
+  if (token) {
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    const current = userSessions.find(s => s.tokenHash === tokenHash);
+    if (current) currentSessionId = current.id;
+  }
+  const safeSessions = userSessions.map(s => ({
+    id: s.id,
+    userId: s.userId,
+    userAgent: s.userAgent,
+    ipAddress: s.ipAddress,
+    createdAt: s.createdAt,
+    expiresAt: s.expiresAt,
+  }));
+
+  const initials = user.name.split(" ").map(n => n[0]).join("").substring(0,2).toUpperCase();
+
+  return (
+    <div className="space-y-6 fade-in-up pb-12">
+      {/* 1. Üst Koyu Banner */}
+      <div className="relative overflow-hidden rounded-[24px] bg-[#0A101D] px-8 py-10 shadow-2xl">
+        <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-[100px]" />
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+        
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-4 max-w-2xl">
+            <div className="flex items-center gap-2 text-blue-400 font-bold tracking-wider text-xs uppercase">
+              <User className="h-4 w-4" />
+              Hesap Merkezi
+            </div>
+            <h1 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
+              Profil ve güvenlik
+            </h1>
+            <p className="text-slate-300 text-sm">
+              Yönetim hesabınızın kimlik bilgilerini, profil fotoğrafını ve oturum güvenliğini tek noktadan yönetin.
+            </p>
+          </div>
+          
+          <div className="flex shrink-0 items-center gap-3 rounded-2xl bg-white/5 border border-white/10 px-5 py-4 backdrop-blur-md">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success/20 text-success">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-success uppercase tracking-widest mb-0.5">Hesap Durumu</p>
+              <p className="text-sm font-semibold text-white">Aktif ve korunuyor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. İki Kolonlu Alt Yapı */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+        
+        {/* Sol Kolon: Kişisel Bilgiler */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+          <div className="rounded-[24px] border border-panel-secondary bg-white p-6 shadow-soft">
+            <div className="mb-6">
+              <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Kişisel Bilgiler</p>
+              <h2 className="text-lg font-bold text-foreground">Yönetici profili</h2>
+            </div>
+            
+            {/* Profil Resmi & İsim */}
+            <div className="flex items-center gap-5 mb-8">
+              <div className="relative">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-primary text-2xl font-bold text-white shadow-md relative group">
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt="Profil" className="h-full w-full object-cover" />
+                  ) : (
+                    <span>
+                      {(() => {
+                        const cleanName = user.name?.split(" (")[0] || "US";
+                        const parts = cleanName.split(" ");
+                        return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+                      })()}
+                    </span>
+                  )}
+                  {/* Gelecekte eklenecek fotoğraf değiştirme butonu için overlay */}
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <Camera className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4 overflow-hidden">
+                <div className="min-w-0">
+                  <h3 className="text-lg font-bold text-foreground leading-tight truncate">{user.name?.split(" (")[0]}</h3>
+                  <p className="text-xs text-muted mt-1 truncate">{user.email}</p>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <button className="flex items-center gap-1.5 rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/10">
+                    Fotoğrafı Değiştir
+                  </button>
+                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-semibold text-danger transition hover:bg-danger/5 hover:text-danger/80">
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Kaldır
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="h-px w-full bg-panel-secondary/60 mb-8" />
+
+            {/* Bilgiler Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1 rounded-2xl bg-panel-secondary/30 p-4">
+                <div className="flex items-center gap-1.5 text-muted mb-1">
+                  <Mail className="h-4 w-4" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">E-posta Adresi</span>
+                </div>
+                <span className="text-sm font-semibold text-foreground break-all">{user.email}</span>
+              </div>
+              
+              <div className="flex flex-col gap-1 rounded-2xl bg-panel-secondary/30 p-4">
+                <div className="flex items-center gap-1.5 text-muted mb-1">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Yetki Seviyesi</span>
+                </div>
+                <div>
+                  <span className="inline-flex rounded-full bg-sky-500 text-white px-2.5 py-0.5 text-xs font-bold uppercase">
+                    {user.role === "admin" ? "Sistem Yöneticisi" : "Müşteri"}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-1 rounded-2xl bg-panel-secondary/30 p-4">
+                <div className="flex items-center gap-1.5 text-muted mb-1">
+                  <Clock className="h-4 w-4" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Son Giriş</span>
+                </div>
+                <span className="text-sm font-semibold text-foreground">
+                  {safeSessions[0]?.createdAt ? format(new Date(safeSessions[0].createdAt), "dd MMMM yyyy HH:mm", { locale: tr }) : "Bilinmiyor"}
+                </span>
+              </div>
+              
+              <div className="flex flex-col gap-1 rounded-2xl bg-panel-secondary/30 p-4">
+                <div className="flex items-center gap-1.5 text-muted mb-1">
+                  <CalendarDays className="h-4 w-4" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Hesap Oluşturma</span>
+                </div>
+                <span className="text-sm font-semibold text-foreground">
+                  {format(new Date(user.createdAt), "dd MMMM yyyy HH:mm", { locale: tr })}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sağ Kolon: Güvenlik ve Oturumlar */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
+          <div className="rounded-[24px] border border-panel-secondary bg-white p-6 shadow-soft">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-panel-secondary/60">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Key className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-foreground">Güvenlik ve Oturumlar</h2>
+                  <p className="text-xs text-muted">Hesabınızın güvenliğini artırın ve oturumlarınızı yönetin.</p>
+                </div>
+              </div>
+              <Link href="/profil/aktivite" className="shrink-0 rounded-xl border border-panel-secondary px-4 py-2 text-xs font-semibold text-muted transition hover:bg-panel-secondary hover:text-foreground">
+                Aktivite Geçmişi
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              {/* 2FA Kartı */}
+              <div className="flex flex-col justify-between rounded-[20px] border border-panel-secondary p-5 transition hover:border-primary/30">
+                <div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
+                    <ShieldCheck className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-sm font-bold text-foreground mb-1">İki Aşamalı Doğrulama</h3>
+                  <p className="text-xs text-muted leading-relaxed">
+                    Şifrenize ek olarak, girişlerde güvenlik kodu kullanarak hesabınızı koruyun.
+                  </p>
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className={`h-2.5 w-2.5 rounded-full ${user.isTwoFactorEnabled ? "bg-success" : "bg-muted"}`} />
+                    <span className="text-xs font-semibold text-foreground">
+                      {user.isTwoFactorEnabled ? "Açık" : "Kapalı"}
+                    </span>
+                  </div>
+                  <Link href="/profil/guvenlik" className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white transition hover:bg-primary-strong">
+                    Yönet
+                  </Link>
+                </div>
+              </div>
+
+              {/* Oturumlar Özeti Kartı */}
+              <div className="flex flex-col justify-between rounded-[20px] border border-panel-secondary p-5 transition hover:border-primary/30 bg-panel-secondary/10">
+                <div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
+                    <MonitorSmartphone className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-sm font-bold text-foreground mb-1">Aktif Oturumlar</h3>
+                  <p className="text-xs text-muted leading-relaxed mb-4">
+                    Hesabınızda açık olan {safeSessions.length} cihaz bulundu.
+                  </p>
+                  
+                  {/* Sadece Mevcut Oturumu Göster (Özet) */}
+                  {currentSessionId && safeSessions.find(s => s.id === currentSessionId) && (
+                    <div className="rounded-xl bg-white p-3 border border-panel-secondary shadow-sm flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-[11px] font-bold text-foreground truncate w-32">
+                          {safeSessions.find(s => s.id === currentSessionId)?.userAgent?.split(" ")[0] || "Windows"}
+                        </p>
+                        <p className="text-[9px] text-muted truncate">
+                          {safeSessions.find(s => s.id === currentSessionId)?.ipAddress}
+                        </p>
+                      </div>
+                      <span className="rounded-full bg-success/10 px-2 py-1 text-[9px] font-bold text-success uppercase">
+                        Mevcut
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-4 flex items-center gap-2">
+                  <Link href="/profil/oturumlar" className="flex-1 text-center rounded-xl border border-panel-secondary px-3 py-2 text-xs font-semibold text-muted transition hover:bg-panel-secondary hover:text-foreground">
+                    Tümünü Yönet
+                  </Link>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
