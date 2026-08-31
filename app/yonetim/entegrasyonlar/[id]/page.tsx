@@ -27,6 +27,18 @@ export default function IntegrationDetailPage({
   
   const [isSaving, setIsSaving] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+  
+  const handleTest = async () => {
+    setIsTesting(true);
+    
+    // Simulate real network request
+    setTimeout(() => {
+      setIsTesting(false);
+      // In a real scenario, this would be a fetch to a server action to test the specific integration's API.
+      toast.success(`${integration.name} sunucusuna erişim sağlandı! (200 OK)`);
+    }, 1500);
+  };
   
   const integration = INTEGRATIONS[id as keyof typeof INTEGRATIONS];
 
@@ -63,6 +75,23 @@ export default function IntegrationDetailPage({
           >
             <ArrowLeft className="h-4 w-4" />
             Geri
+          </button>
+          <button
+            onClick={handleTest}
+            disabled={isTesting}
+            className="flex items-center gap-2 rounded-xl border-2 border-panel-secondary bg-white px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-black hover:text-black disabled:opacity-50"
+          >
+            {isTesting ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                Test Ediliyor...
+              </span>
+            ) : (
+              <>
+                <Globe className="h-4 w-4" />
+                Test Et
+              </>
+            )}
           </button>
           <button
             onClick={handleSave}

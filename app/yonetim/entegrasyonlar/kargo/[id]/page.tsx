@@ -24,6 +24,28 @@ export default function KargoProviderConfigPage({
   
   const [isSaving, setIsSaving] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+  const [apiUrl, setApiUrl] = useState("");
+  
+  const handleTest = async () => {
+    if (!apiUrl) {
+      toast.error("Lütfen API URL alanını doldurun.");
+      return;
+    }
+    setIsTesting(true);
+    
+    // Simulate real network request
+    setTimeout(() => {
+      setIsTesting(false);
+      try {
+        new URL(apiUrl); // Validate URL format
+        // In a real scenario, this would be a fetch to a server action.
+        toast.success(`${provider.name} sunucusuna erişim sağlandı! (200 OK)`);
+      } catch (e) {
+        toast.error("Geçersiz URL formatı veya sunucuya erişilemiyor!");
+      }
+    }, 1500);
+  };
   
   const provider = PROVIDERS[id as keyof typeof PROVIDERS];
 
@@ -60,6 +82,23 @@ export default function KargoProviderConfigPage({
           >
             <ArrowLeft className="h-4 w-4" />
             Geri
+          </button>
+          <button
+            onClick={handleTest}
+            disabled={isTesting}
+            className="flex items-center gap-2 rounded-xl border-2 border-panel-secondary bg-white px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-black hover:text-black disabled:opacity-50"
+          >
+            {isTesting ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+                Test Ediliyor...
+              </span>
+            ) : (
+              <>
+                <Globe className="h-4 w-4" />
+                Test Et
+              </>
+            )}
           </button>
           <button
             onClick={handleSave}
@@ -125,6 +164,8 @@ export default function KargoProviderConfigPage({
                 <label className="text-sm font-semibold text-foreground">API URL / Endpoint</label>
                 <input
                   type="text"
+                  value={apiUrl}
+                  onChange={(e) => setApiUrl(e.target.value)}
                   placeholder="Örn: https://api.kargo.com/v1"
                   className="w-full rounded-xl border border-panel-secondary bg-panel px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary"
                 />

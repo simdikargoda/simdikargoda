@@ -8,9 +8,41 @@ import { useState } from "react";
 
 export default function SupabaseIntegrationPage() {
   const router = useRouter();
-  const [anonKey, setAnonKey] = useState("");
-  const [serviceKey, setServiceKey] = useState("");
+  const [anonKey, setAnonKey] = useState("sb_publishable_EZCXm••••••••••••••••••••");
+  const [serviceKey, setServiceKey] = useState("sb_secret_N2Ym9A••••••••••••••••••••");
   const [isSaving, setIsSaving] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+
+  const handleTest = async () => {
+    setIsTesting(true);
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      
+      if (!url || !key) {
+        toast.error("Bağlantı URL'si veya Anahtar eksik! .env dosyasını kontrol edin.");
+        setIsTesting(false);
+        return;
+      }
+      
+      const res = await fetch(`${url}/auth/v1/health`, {
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`
+        }
+      });
+      
+      if (res.ok) {
+        toast.success("Bağlantı Başarılı! Supabase sunucusu yanıt veriyor.");
+      } else {
+        toast.error(`Bağlantı Hatası: Sunucu ${res.status} kodu döndürdü.`);
+      }
+    } catch (error) {
+      toast.error("Bağlantı Kurulamadı! Lütfen internet bağlantınızı veya URL'yi kontrol edin.");
+    } finally {
+      setIsTesting(false);
+    }
+  };
 
   const handleSave = () => {
     setIsSaving(true);
@@ -106,11 +138,11 @@ export default function SupabaseIntegrationPage() {
                 </p>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button 
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 flex-1"
                 >
                   {isSaving ? (
                     <span className="flex items-center gap-2">
@@ -121,6 +153,24 @@ export default function SupabaseIntegrationPage() {
                     <>
                       <Save className="h-4 w-4" />
                       Anahtarları Kaydet
+                    </>
+                  )}
+                </button>
+
+                <button 
+                  onClick={handleTest}
+                  disabled={isTesting}
+                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-panel-secondary bg-white px-6 py-2.5 text-sm font-semibold text-foreground transition-all hover:border-emerald-600 hover:text-emerald-600 disabled:opacity-50 flex-1"
+                >
+                  {isTesting ? (
+                    <span className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full border-2 border-emerald-600/20 border-t-emerald-600 animate-spin" />
+                      Test Ediliyor...
+                    </span>
+                  ) : (
+                    <>
+                      <Database className="h-4 w-4" />
+                      Bağlantıyı Test Et
                     </>
                   )}
                 </button>
