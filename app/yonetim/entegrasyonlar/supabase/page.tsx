@@ -55,14 +55,14 @@ export default function SupabaseIntegrationPage() {
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-muted uppercase tracking-wider">Proje ID (Reference ID)</label>
                 <div className="rounded-lg bg-panel-secondary px-3 py-2 text-sm font-medium text-foreground break-all font-mono">
-                  gvenrhikcyfhxalvrtnw
+                  gvenrhikcy••••••••••
                 </div>
               </div>
               
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-muted uppercase tracking-wider">API URL</label>
                 <div className="rounded-lg bg-panel-secondary px-3 py-2 text-sm font-medium text-foreground break-all font-mono">
-                  https://gvenrhikcyfhxalvrtnw.supabase.co
+                  https://gvenrhikcy••••••••••.supabase.co
                 </div>
               </div>
             </div>

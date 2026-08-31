@@ -66,8 +66,8 @@ export default function VercelIntegrationPage() {
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-muted uppercase tracking-wider">Proje ID</label>
-                <div className="rounded-lg bg-panel-secondary px-3 py-2 text-sm font-medium text-foreground break-all font-mono">
-                  prj_uLPIloJx7dvdNQapf2jtZp5sXoEy
+                <div className="rounded-lg bg-panel-secondary px-3 py-2 text-sm font-medium text-foreground break-all font-mono flex items-center justify-between">
+                  <span>prj_uLPIloJx••••••••••••••••••••</span>
                 </div>
               </div>
               
