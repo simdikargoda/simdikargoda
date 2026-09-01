@@ -13,16 +13,7 @@ export default async function AuditLoglarPage({ title, description }: { title: s
   await requireStaff();
   let logs = await getAuditLogs(100);
 
-  if (!logs || logs.length === 0) {
-    logs = [
-      { id: "1", action: "USER_LOGIN_SUCCESS", entityType: "AUTH", entityId: "user-1", actorUserId: "user-1", createdAt: new Date(Date.now() - 1000 * 60 * 5) },
-      { id: "2", action: "SHIPMENT_CREATED", entityType: "SHIPMENT", entityId: "shp-9128", actorUserId: "user-3", createdAt: new Date(Date.now() - 1000 * 60 * 45) },
-      { id: "3", action: "ROLE_UPDATED", entityType: "ROLE", entityId: "role-admin", actorUserId: "user-1", createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2) },
-      { id: "4", action: "BALANCE_ADDED", entityType: "FINANCE", entityId: "trx-7731", actorUserId: "system", createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24) },
-      { id: "5", action: "API_KEY_REVOKED", entityType: "INTEGRATION", entityId: "int-trendyol", actorUserId: "user-1", createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48) },
-      { id: "6", action: "USER_DELETED", entityType: "USER", entityId: "user-8", actorUserId: "user-2", createdAt: new Date(Date.now() - 1000 * 60 * 60 * 72) },
-    ] as any;
-  }
+
 
   return (
     <div className="space-y-6">
