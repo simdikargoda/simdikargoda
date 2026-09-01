@@ -7,6 +7,7 @@ import {
   uniqueIndex,
   uuid,
   boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 
 // ------------------------------------------------------------------
@@ -39,6 +40,11 @@ export const users = pgTable(
 
     // customer rolündeki kullanıcının bağlı olduğu müşteri (tenant)
     customerId: uuid("customer_id"),
+    
+    // Brute-force koruması
+    failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
+    lockedUntil: timestamp("locked_until", { withTimezone: true }),
+    
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

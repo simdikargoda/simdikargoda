@@ -22,6 +22,7 @@ export type ErrorCode =
   | "DUPLICATE_SHIPMENT"
   | "DUPLICATE_REQUEST"
   | "CONFLICT"
+  | "TOO_MANY_REQUESTS"
   | "INTERNAL";
 
 export class AppError extends Error {

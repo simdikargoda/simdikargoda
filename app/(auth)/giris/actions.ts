@@ -58,9 +58,33 @@ export async function loginAction(
       throw new AppError("UNAUTHORIZED", "E-posta veya şifre hatalı.", 401);
     }
 
+    // Admin muafiyeti: Yöneticiler brute-force kilidine takılmaz.
+    if (user.role !== "admin") {
+      if (user.lockedUntil && user.lockedUntil.getTime() > Date.now()) {
+        throw new AppError("TOO_MANY_REQUESTS", "Çok fazla hatalı giriş yaptınız. Lütfen daha sonra tekrar deneyin.", 429);
+      }
+    }
+
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
+      if (user.role !== "admin") {
+        const newAttempts = user.failedLoginAttempts + 1;
+        const updates: { failedLoginAttempts: number; lockedUntil?: Date | null } = { 
+          failedLoginAttempts: newAttempts 
+        };
+        
+        if (newAttempts >= 5) {
+          updates.lockedUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika kilit
+        }
+        
+        await db.update(users).set(updates).where(eq(users.id, user.id));
+      }
       throw new AppError("UNAUTHORIZED", "E-posta veya şifre hatalı.", 401);
+    }
+
+    // Başarılı giriş: hata sayacını ve kilidi sıfırla
+    if (user.role !== "admin" && (user.failedLoginAttempts > 0 || user.lockedUntil)) {
+      await db.update(users).set({ failedLoginAttempts: 0, lockedUntil: null }).where(eq(users.id, user.id));
     }
 
     // 2FA açıksa session başlatmadan geçici token ver

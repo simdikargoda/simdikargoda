@@ -44,7 +44,7 @@ export function SidebarLayout({ children, user }: { children: ReactNode; user?: 
     <SidebarContext.Provider value={{ isCollapsed, toggleCollapse, setMobileOpen }}>
       <div className="min-h-screen bg-background flex flex-col">
         {/* Desktop Sidebar */}
-        <Sidebar isCollapsed={isCollapsed} toggleCollapse={toggleCollapse} user={user} />
+        <Sidebar isCollapsed={isCollapsed} user={user} />
         
         {/* Mobile Sidebar */}
         <MobileSidebar open={mobileOpen} onClose={() => setMobileOpen(false)} user={user} />
