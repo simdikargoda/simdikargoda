@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
  */
 export default async function AuditLoglarPage({ title, description }: { title: string; description: string }) {
   await requireStaff();
-  let logs = await getAuditLogs(100);
+  const logs = await getAuditLogs(100);
 
 
 
