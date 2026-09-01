@@ -328,7 +328,7 @@ function NavItem({ item, pathname, isCollapsed }: { item: any; pathname: string;
 function NavContent({ pathname, isCollapsed, user }: { pathname: string; isCollapsed?: boolean; user?: any }) {
   return (
     <div className="flex flex-col h-full bg-slate-900">
-      <div className={cn("flex h-16 shrink-0 items-center border-b border-slate-800", isCollapsed ? "justify-center px-0" : "px-5 gap-3")}>
+      <div className={cn("flex h-16 shrink-0 items-center", isCollapsed ? "justify-center px-0" : "px-5 gap-3")}>
         <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-soft">
           <Package className="h-[18px] w-[18px]" />
         </span>

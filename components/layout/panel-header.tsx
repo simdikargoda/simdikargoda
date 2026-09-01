@@ -17,7 +17,7 @@ export function PanelHeader({ user }: { user?: any }) {
   void pathname;
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-panel-secondary bg-white/80 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 bg-white/80 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
       {/* Sol Kısım: Menü Toggle & Arama Çubuğu */}
       <div className="flex-1 max-w-2xl w-full flex items-center">
         <button

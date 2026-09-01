@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { requireStaff } from "@/lib/guard";
 import { netgsmConfigured } from "@/lib/services/notifications/netgsm.service";
+import { NetgsmForm } from "./netgsm-form";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,7 @@ export default async function NetgsmAyarlarPage() {
   const configured = netgsmConfigured();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 fade-in-up">
       <PageHeader
         title="Netgsm Ayarları"
         description="SMS sağlayıcı yapılandırma durumu"
@@ -28,8 +29,10 @@ export default async function NetgsmAyarlarPage() {
           }
         />
       </div>
+      
+      {!configured && <NetgsmForm />}
 
-      <div className="card-surface rounded-2xl border border-panel-secondary p-6">
+      <div className="card-surface rounded-2xl border border-panel-secondary p-6 mt-6">
         <h3 className="text-sm font-semibold text-foreground mb-3">Gerekli Değişkenler</h3>
         <ul className="space-y-2 text-sm text-muted">
           <li><code>NETGSM_USERCODE</code> — Netgsm kullanıcı adı</li>
@@ -37,8 +40,7 @@ export default async function NetgsmAyarlarPage() {
           <li><code>NETGSM_HEADER</code> — Gönderen başlığı</li>
         </ul>
         <p className="mt-4 text-sm text-muted">
-          Bu değerler yalnızca sunucu tarafı ortam değişkenlerinde tutulur; asla
-          tarayıcıya gönderilmez. Gönderim gerçekleşmeden başarı olarak işaretlenmez.
+          Bu değerler sunucu tarafı ortam değişkenlerinde (<code>.env.local</code>) tutulur ve asla tarayıcıya gönderilmez.
         </p>
       </div>
     </div>

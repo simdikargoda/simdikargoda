@@ -8,14 +8,14 @@ import { z } from "zod";
 import { AppError } from "@/lib/errors";
 
 const rowSchema = z.object({
-  receiverName: z.string().min(2),
-  receiverPhone: z.string().min(7),
-  receiverAddress: z.string().min(5),
+  receiverName: z.string({ required_error: "Alıcı adı zorunludur" }).min(2, "Alıcı adı en az 2 karakter olmalıdır"),
+  receiverPhone: z.string({ required_error: "Alıcı telefonu zorunludur" }).min(7, "Alıcı telefonu en az 7 karakter olmalıdır"),
+  receiverAddress: z.string({ required_error: "Alıcı adresi zorunludur" }).min(5, "Alıcı adresi en az 5 karakter olmalıdır"),
   receiverCity: z.string().optional(),
   receiverDistrict: z.string().optional(),
-  packageCount: z.coerce.number().int().min(1),
-  desi: z.coerce.number().int().min(1),
-  weight: z.coerce.number().int().min(1),
+  packageCount: z.coerce.number({ invalid_type_error: "Paket sayısı geçerli bir sayı olmalıdır" }).int().min(1, "Paket sayısı en az 1 olmalıdır"),
+  desi: z.coerce.number({ invalid_type_error: "Desi geçerli bir sayı olmalıdır" }).int().min(1, "Desi en az 1 olmalıdır"),
+  weight: z.coerce.number({ invalid_type_error: "Ağırlık geçerli bir sayı olmalıdır" }).int().min(1, "Ağırlık en az 1 olmalıdır"),
   description: z.string().optional(),
 });
 

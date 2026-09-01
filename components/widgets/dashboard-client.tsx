@@ -169,9 +169,26 @@ export function DashboardClient({ data, initialRange = "Bugün", userName = "Kul
         <div className="flex items-center gap-3 relative">
           <button 
             onClick={() => {
-              toast.info("CSV İndirme", {
-                description: "Verileri CSV olarak dışa aktarma işlemi yakında eklenecek."
-              });
+              const csvContent = [
+                "Bölüm;Kategori;Değer",
+                `KPI;Toplam Gönderi;${kpi.totalShipments.value}`,
+                `KPI;Teslim Edilen;${kpi.delivered.value}`,
+                `KPI;Dağıtımda;${kpi.inTransit.value}`,
+                `KPI;İade;${kpi.returned.value}`,
+                `KPI;Toplam Ciro;${formatKurus(kpi.revenueKurus.value).replace(/₺/g, "").trim()}`,
+                ...byProvider.map((p: any) => `Firma Dağılımı;${getProviderName(p.name)};${p.count}`),
+                ...byStatus.map((s: any) => `Durum Dağılımı;${getStatusName(s.name)};${s.count}`)
+              ].join("\n");
+              
+              const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.setAttribute("download", `dashboard-ozet-${new Date().toISOString().split("T")[0]}.csv`);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              toast.success("CSV İndirildi", { description: "Veriler başarıyla bilgisayarınıza kaydedildi." });
             }}
             className="flex items-center gap-2 rounded-xl border border-panel-secondary bg-white px-4 py-2 text-sm font-medium text-muted shadow-sm hover:text-foreground hover:border-slate-300 transition-colors"
           >
@@ -305,7 +322,7 @@ export function DashboardClient({ data, initialRange = "Bugün", userName = "Kul
         <div className="rounded-2xl border border-panel-secondary bg-white p-5 shadow-sm lg:col-span-1 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-semibold text-foreground">Son İşlemler</h3>
-            <span className="text-xs font-medium text-muted hover:text-foreground cursor-pointer">Tümünü Gör</span>
+            <Link href="/yonetim/kargo" className="text-xs font-medium text-muted hover:text-foreground cursor-pointer">Tümünü Gör</Link>
           </div>
           <div className="flex-1 flex flex-col justify-between">
             <div className="space-y-5">
@@ -336,9 +353,9 @@ export function DashboardClient({ data, initialRange = "Bugün", userName = "Kul
               })}
             </div>
             <div className="mt-4 pt-4 border-t border-panel-secondary text-center">
-              <button className="text-xs font-semibold text-muted hover:text-foreground flex items-center justify-center w-full gap-1">
+              <Link href="/yonetim/kargo" className="text-xs font-semibold text-muted hover:text-foreground flex items-center justify-center w-full gap-1">
                 Tüm aktiviteleri göster <ArrowRight className="h-3 w-3" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -35,6 +35,15 @@ export default async function KargoEntegrasyonlarPage() {
       <PageHeader
         title="Kargo Firmaları"
         description="Gönderi entegrasyonu ve bağlantı durumları"
+        actions={
+          <Link
+            href="/yonetim/entegrasyonlar/kargo/yeni"
+            className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90"
+          >
+            <Truck className="h-4 w-4" />
+            Yeni Firma Ekle
+          </Link>
+        }
       />
 
       {list.length === 0 ? (

@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="tr" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-right" closeButton />
         <SpeedInsights />
       </body>
     </html>

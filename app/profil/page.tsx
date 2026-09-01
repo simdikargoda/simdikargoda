@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { User, ShieldCheck, Mail, Clock, Key, MonitorSmartphone, Camera, Trash2, CalendarDays } from "lucide-react";
+import { AvatarUploader } from "./avatar-uploader";
 import { requireAuth } from "@/lib/guard";
 import { getDb } from "@/db/client";
 import { users, sessions } from "@/db/schema/auth";
@@ -124,14 +125,11 @@ export default async function ProfilePage() {
                   <h3 className="text-lg font-bold text-foreground leading-tight truncate">{user.name?.split(" (")[0]}</h3>
                   <p className="text-xs text-muted mt-1 truncate">{user.email}</p>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <button className="flex items-center gap-1.5 rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/10">
-                    Fotoğrafı Değiştir
-                  </button>
-                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-semibold text-danger transition hover:bg-danger/5 hover:text-danger/80">
-                    <Trash2 className="h-3.5 w-3.5" />
-                    Kaldır
-                  </button>
+                <div className="shrink-0 mt-4 sm:mt-0">
+                  <AvatarUploader 
+                    currentAvatarUrl={user.avatarUrl || ""} 
+                    userId={user.id} 
+                  />
                 </div>
               </div>
             </div>

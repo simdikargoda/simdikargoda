@@ -125,7 +125,9 @@ export default function PricingClient({
                       {p.customerName ?? "—"}
                     </td>
                     <td className="px-4 py-3 capitalize text-muted">{p.provider}</td>
-                    <td className="px-4 py-3 capitalize text-muted">{p.type}</td>
+                    <td className="px-4 py-3 capitalize text-muted">
+                      {p.type === "fixed" ? "Sabit" : p.type === "per_weight" ? "Ağırlık Başına" : p.type === "per_desi" ? "Desi Başına" : p.type}
+                    </td>
                     <td className="px-4 py-3 text-right font-mono text-foreground">
                       {formatKurus(p.priceKurus)}
                     </td>

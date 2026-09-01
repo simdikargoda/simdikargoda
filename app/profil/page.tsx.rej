@@ -1,0 +1,17 @@
+@@ -120,11 +120,10 @@
+               </div>
+               <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4 overflow-hidden">
+-                <div className="flex flex-col gap-1 sm:ml-4">
+-                <h3 className="text-xl font-bold tracking-tight text-foreground">{user.name}</h3>
+-                <p className="text-sm font-medium text-muted">{user.email}</p>
+-                
+-                <AvatarUploader currentAvatarUrl={user.avatarUrl || ""} userId={user.id} />
+-              </div>
++                <div className="min-w-0">
++                  <h3 className="text-lg font-bold text-foreground leading-tight truncate">{user.name?.split(" (")[0]}</h3>
++                  <p className="text-xs text-muted mt-1 truncate">{user.email}</p>
++                </div>
++                <AvatarUploader currentAvatarUrl={user.avatarUrl || ""} userId={user.id} />
+               </div>
+             </div>
+ 

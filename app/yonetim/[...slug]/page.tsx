@@ -2,16 +2,25 @@
 
 import { PageHeader } from "@/components/ui/page-header";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 export default function GenericActivePage() {
   const router = useRouter();
+  const params = useParams();
+  
+  // params.slug bir dizi olabilir (ör: ['finans', 'bakiye'])
+  const slugArray = Array.isArray(params?.slug) ? params.slug : typeof params?.slug === 'string' ? [params.slug] : [];
+  
+  // Slug'ı başlığa dönüştür: "finans/bakiye" -> "Finans - Bakiye"
+  const title = slugArray.length > 0 
+    ? slugArray.map(s => s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ')).join(" - ")
+    : "Modül";
 
   return (
     <div className="space-y-6 fade-in-up pb-12">
       <div className="flex items-center justify-between">
         <PageHeader 
-          title="Yonetim - [...slug]" 
+          title={title} 
           description="Bu modül aktif olarak çalışmaktadır ve sistemle entegre durumdadır." 
         />
         <button
