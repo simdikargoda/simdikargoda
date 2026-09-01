@@ -1,8 +1,7 @@
 import "server-only";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
-import { getDb } from "@/db/client";
 import { AppError } from "@/lib/errors";
 import { shipments, shipmentStatusHistory } from "@/db/schema/shipment";
 import { normalizeStatus } from "@/lib/providers/cargo/status-map";

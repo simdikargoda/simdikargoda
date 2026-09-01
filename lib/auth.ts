@@ -147,7 +147,7 @@ export async function getCurrentSession(): Promise<SessionPayload | null> {
   let payload: SessionPayload;
   try {
     payload = await verifyToken(token);
-  } catch (error) {
+  } catch {
     // Token geçersiz veya süresi dolmuşsa oturum yok sayılır
     return null;
   }

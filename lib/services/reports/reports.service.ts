@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { and, gte, lt, sql } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
 import { shipmentStatusEnum, shipments } from "@/db/schema/shipment";

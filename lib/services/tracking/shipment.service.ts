@@ -2,10 +2,8 @@ import "server-only";
 
 import { eq } from "drizzle-orm";
 
-import { getDb } from "@/db/client";
 import { AppError } from "@/lib/errors";
 import { shipments, shipmentStatusHistory } from "@/db/schema/shipment";
-import type { DbTx } from "@/lib/services/finance/balance.service";
 
 export type ShipmentStatus = typeof shipmentStatusHistory.$inferInsert["toStatus"];
 
@@ -50,8 +48,6 @@ export async function createShipmentRecord(input: CreateShipmentInput) {
   }
 
   return db.transaction(async (tx) => {
-    const txRef = tx as unknown as DbTx;
-
     const [shipment] = await tx
       .insert(shipments)
       .values({

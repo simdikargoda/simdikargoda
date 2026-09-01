@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 // Next.js'te .env.local otomatik yüklenir; standalone seed için explicit yükleriz.
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });

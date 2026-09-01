@@ -21,9 +21,9 @@ const schema = {
 export type Database = NodePgDatabase<typeof schema>;
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __dbPool: Pool | undefined;
-  // eslint-disable-next-line no-var
+   
   var __db: Database | undefined;
 }
 

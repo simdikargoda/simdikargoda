@@ -325,7 +325,7 @@ function NavItem({ item, pathname, isCollapsed }: { item: any; pathname: string;
   );
 }
 
-function NavContent({ pathname, isCollapsed, toggleCollapse, user }: { pathname: string; isCollapsed?: boolean; toggleCollapse?: () => void; user?: any }) {
+function NavContent({ pathname, isCollapsed, user }: { pathname: string; isCollapsed?: boolean; user?: any }) {
   return (
     <div className="flex flex-col h-full bg-slate-900">
       <div className={cn("flex h-16 shrink-0 items-center border-b border-slate-800", isCollapsed ? "justify-center px-0" : "px-5 gap-3")}>
@@ -424,7 +424,7 @@ function NavContent({ pathname, isCollapsed, toggleCollapse, user }: { pathname:
 }
 
 /** Desktop sidebar — fixed, 256 px veya 80 px genişlik. */
-export function Sidebar({ isCollapsed, toggleCollapse, user }: { isCollapsed?: boolean; toggleCollapse?: () => void; user?: any }) {
+export function Sidebar({ isCollapsed, user }: { isCollapsed?: boolean; user?: any }) {
   const pathname = usePathname();
   return (
     <aside className={cn(
