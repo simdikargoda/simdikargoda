@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/guard";
 import { SidebarLayout } from "@/components/layout/sidebar-layout";
 import { PanelHeader } from "@/components/layout/panel-header";

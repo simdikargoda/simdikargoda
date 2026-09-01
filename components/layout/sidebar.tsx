@@ -25,7 +25,6 @@ import {
   X,
   ChevronDown,
   FileUp,
-  Boxes,
   PackageCheck,
   Clock,
   TrendingUp,
@@ -43,8 +42,6 @@ const TLIcon = (props: any) => (
     ₺
   </span>
 );
-
-import { toast } from "sonner";
 
 const NAV_SECTIONS = [
   {

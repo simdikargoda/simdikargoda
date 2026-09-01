@@ -167,7 +167,7 @@ export function CustomersTable({
 }
 
 function DeleteCustomerForm({ customerId }: { customerId: string }) {
-  const [state, formAction, pending] = useActionState(deleteCustomerAction, {});
+  const [_state, formAction, pending] = useActionState(deleteCustomerAction, {});
 
   return (
     <form

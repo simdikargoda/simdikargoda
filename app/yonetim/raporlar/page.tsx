@@ -17,12 +17,6 @@ export default async function RaporlarPage() {
     value: p.count,
   }));
 
-  const statusChartData = data.byStatus.map((s) => ({
-    key: s.name,
-    label: s.name,
-    value: s.count,
-  }));
-
   return (
     <div className="space-y-6">
       <PageHeader
