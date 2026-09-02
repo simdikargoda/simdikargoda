@@ -23,8 +23,25 @@ const PALLETTE = [
 export function ProviderDonutChart({ data }: { data: ChartDatum[] }) {
   const total = data.reduce((acc, d) => acc + d.value, 0);
 
+  if (data.length === 0 || total === 0) {
+    return (
+      <div className="flex h-56 w-full items-center justify-center relative">
+        <div className="absolute inset-0 flex items-center justify-center">
+          {/* Empty state circle */}
+          <div className="h-[150px] w-[150px] rounded-full border-[18px] border-panel-secondary/30"></div>
+        </div>
+        <div className="pointer-events-none absolute flex flex-col items-center">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-muted">
+            Gönderi Yok
+          </span>
+          <span className="text-2xl font-semibold text-foreground/50">0</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-56 w-full items-center justify-center">
+    <div className="flex h-56 w-full items-center justify-center relative">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

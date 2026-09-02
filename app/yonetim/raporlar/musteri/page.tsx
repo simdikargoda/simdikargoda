@@ -1,6 +1,7 @@
 import { requireStaff } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Users } from "lucide-react";
 import { formatKurus } from "@/lib/money";
 import { getCustomerReport } from "@/lib/services/reports/reports.service";
 import { getCustomers } from "@/lib/queries/customer.queries";
@@ -31,7 +32,7 @@ export default async function MusteriRaporlarPage() {
           Müşteri Performansı
         </div>
         {rows.length === 0 ? (
-          <EmptyState title="Veri yok" description="Henüz müşteri gönderi kaydı bulunmuyor." />
+          <EmptyState icon={Users} title="Veri yok" description="Henüz müşteri gönderi kaydı bulunmuyor." />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">

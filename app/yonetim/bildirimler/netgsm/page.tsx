@@ -12,13 +12,13 @@ export default async function NetgsmAyarlarPage() {
   const configured = netgsmConfigured();
 
   return (
-    <div className="space-y-6 fade-in-up">
+    <div className="max-w-3xl mx-auto space-y-6 fade-in-up pb-12">
       <PageHeader
         title="Netgsm Ayarları"
         description="SMS sağlayıcı yapılandırma durumu"
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4">
         <StatCard
           label="Yapılandırma Durumu"
           value={configured ? "Yapılandırıldı" : "Yapılandırılmadı"}
@@ -30,7 +30,7 @@ export default async function NetgsmAyarlarPage() {
         />
       </div>
       
-      {!configured && <NetgsmForm />}
+      <NetgsmForm />
 
       <div className="card-surface rounded-2xl border border-panel-secondary p-6 mt-6">
         <h3 className="text-sm font-semibold text-foreground mb-3">Gerekli Değişkenler</h3>

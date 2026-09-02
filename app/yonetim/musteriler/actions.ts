@@ -20,11 +20,13 @@ const createCustomerSchema = z.object({
   type: z.enum(["balance", "current_account"]).default("balance"),
   initialBalance: z.coerce.number().min(0).optional(),
   initialLimit: z.coerce.number().min(0).optional(),
+  password: z.string().min(6, "Şifre en az 6 karakter olmalıdır.").optional(),
 });
 
 export type CreateCustomerState = {
   error?: string;
   success?: boolean;
+  customerId?: string;
 };
 
 export async function createCustomerAction(
@@ -46,6 +48,7 @@ export async function createCustomerAction(
     type: formData.get("type") ?? "balance",
     initialBalance: formData.get("initialBalance") || undefined,
     initialLimit: formData.get("initialLimit") || undefined,
+    password: formData.get("password") || undefined,
   });
 
   if (!parsed.success) {
@@ -55,7 +58,7 @@ export async function createCustomerAction(
   void session; // yetki kontrolü yapıldı
 
   try {
-    await createCustomer({
+    const customer = await createCustomer({
       name: parsed.data.name,
       authorizedPerson: parsed.data.authorizedPerson,
       phone: parsed.data.phone,
@@ -75,7 +78,24 @@ export async function createCustomerAction(
           ? tlToKurus(parsed.data.initialLimit)
           : undefined,
     });
-    return { success: true };
+
+    if (parsed.data.password) {
+      const db = (await import("@/db/client")).getDb();
+      const bcrypt = await import("bcryptjs");
+      const hash = await bcrypt.hash(parsed.data.password, 10);
+      const { users } = await import("@/db/schema/auth");
+      
+      await db.insert(users).values({
+        email: parsed.data.email,
+        name: parsed.data.name,
+        passwordHash: hash,
+        role: "customer",
+        phone: parsed.data.phone,
+        customerId: customer.id,
+      });
+    }
+
+    return { success: true, customerId: customer.id };
   } catch (err) {
     if (err instanceof AppError) {
       return { error: err.message };
@@ -96,6 +116,7 @@ const updateCustomerSchema = z.object({
   city: z.string().optional(),
   district: z.string().optional(),
   status: z.enum(["active", "passive"]),
+  newPassword: z.string().optional(),
 });
 
 export type UpdateCustomerState = {
@@ -121,6 +142,7 @@ export async function updateCustomerAction(
     city: formData.get("city") || undefined,
     district: formData.get("district") || undefined,
     status: formData.get("status"),
+    newPassword: formData.get("newPassword") || undefined,
   });
 
   if (!parsed.success) {
@@ -144,6 +166,27 @@ export async function updateCustomerAction(
       district: parsed.data.district,
       status: parsed.data.status,
     });
+
+    if (parsed.data.newPassword && parsed.data.newPassword.length >= 6) {
+      const db = (await import("@/db/client")).getDb();
+      const bcrypt = await import("bcryptjs");
+      const hash = await bcrypt.hash(parsed.data.newPassword, 10);
+      
+      const { users, sessions } = await import("@/db/schema/auth");
+      const { eq } = await import("drizzle-orm");
+      
+      // Bu müşteriye bağlı ilk kullanıcıyı bul (customer'ın ana kullanıcısı)
+      const targetUser = await db.query.users.findFirst({
+        where: eq(users.customerId, parsed.data.customerId)
+      });
+      
+      if (targetUser) {
+         await db.update(users).set({ passwordHash: hash }).where(eq(users.id, targetUser.id));
+         // Tüm açık oturumlarını kapat
+         await db.delete(sessions).where(eq(sessions.userId, targetUser.id));
+      }
+    }
+
     return { success: true };
   } catch (err) {
     if (err instanceof AppError) {

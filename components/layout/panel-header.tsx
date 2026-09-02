@@ -52,6 +52,15 @@ export function PanelHeader({ user }: { user?: any }) {
 
       {/* Sağ aksiyonlar */}
       <div className="flex shrink-0 items-center gap-3 justify-end">
+        {/* Müşteri Paneline Geçiş */}
+        <a
+          href="/panel"
+          className="hidden sm:flex items-center gap-2 h-9 px-3 rounded-xl bg-panel-secondary/50 border border-panel-secondary text-sm font-medium text-foreground transition hover:bg-primary hover:text-white hover:border-primary"
+          title="Müşteri Paneline Geçiş Yap"
+        >
+          Müşteri Paneli
+        </a>
+
         {/* Profil butonu */}
         <a
           href="/profil"

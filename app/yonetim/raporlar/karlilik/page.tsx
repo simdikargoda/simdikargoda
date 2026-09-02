@@ -2,6 +2,7 @@ import { requireStaff } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { TrendingUp } from "lucide-react";
 import { formatKurus } from "@/lib/money";
 import { getRevenueReport } from "@/lib/services/reports/reports.service";
 
@@ -41,7 +42,7 @@ export default async function KarlilikRaporlarPage() {
           Durum Bazlı Kârlılık
         </div>
         {revenue.length === 0 ? (
-          <EmptyState title="Veri yok" description="Henüz kârlılık kaydı bulunmuyor." />
+          <EmptyState icon={TrendingUp} title="Veri yok" description="Henüz kârlılık kaydı bulunmuyor." />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">

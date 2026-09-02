@@ -1,7 +1,6 @@
 import {
   index,
   integer,
-  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -14,20 +13,18 @@ import { customers } from "@/db/schema/customer";
 import { users } from "@/db/schema/auth";
 
 // ------------------------------------------------------------------
-// Finans: Bakiye (ledger) + Cari hesap + Tahsilat
-// Para alanları: kuruş hassasiyetli INTEGER (float ASLA değil).
+// Finans: Bakiye (ledger) + Cari hesap + Tahsilat + Faturalar
 // ------------------------------------------------------------------
 
 export const balanceTransactionTypeEnum = pgEnum("balance_transaction_type", [
-  "deposit", // bakiye yükleme (havale)
-  "shipment_fee", // kargo ücreti düşümü
-  "refund", // iade
-  "adjustment", // yönetici düzeltmesi
-  "admin_credit", // yönetici yüklemesi
-  "cancel", // iptal/geri ödeme
+  "deposit",
+  "shipment_fee",
+  "refund",
+  "adjustment",
+  "admin_credit",
+  "cancel",
 ]);
 
-/** Tek müşterinin bakiyeli çalışma modelinde geçerli bakiyesini tutar. */
 export const balanceAccounts = pgTable(
   "balance_accounts",
   {
@@ -43,10 +40,6 @@ export const balanceAccounts = pgTable(
   (table) => [index("balance_accounts_customer_id_idx").on(table.customerId)]
 );
 
-/**
- * Bakiye hareketi ledger'ı. Her hareket önceki/sonraki bakiye ile
- * kaydedilerek tam audit izi oluşturur.
- */
 export const balanceTransactions = pgTable(
   "balance_transactions",
   {
@@ -55,10 +48,10 @@ export const balanceTransactions = pgTable(
       .notNull()
       .references(() => customers.id, { onDelete: "cascade" }),
     type: balanceTransactionTypeEnum("type").notNull(),
-    amountKurus: integer("amount_kurus").notNull(), // pozitif: giriş, negatif: çıkış
+    amountKurus: integer("amount_kurus").notNull(),
     balanceBeforeKurus: integer("balance_before_kurus").notNull(),
     balanceAfterKurus: integer("balance_after_kurus").notNull(),
-    referenceType: text("reference_type"), // shipment | deposit | adjustment ...
+    referenceType: text("reference_type"),
     referenceId: uuid("reference_id"),
     description: text("description"),
     performedById: uuid("performed_by_id").references(() => users.id),
@@ -71,7 +64,6 @@ export const balanceTransactions = pgTable(
   ]
 );
 
-/** Havale ile bakiye yükleme talebi. Onaylanmadan bakiye aktifleşmez. */
 export const balanceRequests = pgTable(
   "balance_requests",
   {
@@ -83,7 +75,7 @@ export const balanceRequests = pgTable(
       .notNull()
       .references(() => users.id),
     amountKurus: integer("amount_kurus").notNull().default(0),
-    status: text("status").notNull().default("pending"), // pending | approved | rejected
+    status: text("status").notNull().default("pending"),
     bankReference: text("bank_reference"),
     note: text("note"),
     approvedById: uuid("approved_by_id").references(() => users.id),
@@ -99,12 +91,11 @@ export const balanceRequests = pgTable(
 );
 
 export const currentAccountTransactionTypeEnum = pgEnum("current_account_transaction_type", [
-  "shipment_debit", // kargo borcu
-  "collection", // tahsilat
-  "adjustment", // düzeltme
+  "shipment_debit",
+  "collection",
+  "adjustment",
 ]);
 
-/** Tek müşterinin cari çalışma modeline ait cari hesabı. */
 export const currentAccounts = pgTable(
   "current_accounts",
   {
@@ -113,9 +104,7 @@ export const currentAccounts = pgTable(
       .notNull()
       .references(() => customers.id, { onDelete: "cascade" })
       .unique(),
-    /** Toplam cari borç (pozitif sayı, kuruş). */
     debitKurus: integer("debit_kurus").notNull().default(0),
-    /** Yöneticinin tanımladığı üst limit. */
     limitKurus: integer("limit_kurus").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -123,7 +112,6 @@ export const currentAccounts = pgTable(
   (table) => [index("current_accounts_customer_id_idx").on(table.customerId)]
 );
 
-/** Cari hesap hareketi ledger'ı. */
 export const currentAccountTransactions = pgTable(
   "current_account_transactions",
   {
@@ -132,10 +120,10 @@ export const currentAccountTransactions = pgTable(
       .notNull()
       .references(() => customers.id, { onDelete: "cascade" }),
     type: currentAccountTransactionTypeEnum("type").notNull(),
-    amountKurus: integer("amount_kurus").notNull(), // shipment_debit pozitif(borç artar), collection negatif
+    amountKurus: integer("amount_kurus").notNull(),
     debitBeforeKurus: integer("debit_before_kurus").notNull(),
     debitAfterKurus: integer("debit_after_kurus").notNull(),
-    referenceType: text("reference_type"), // shipment | collection | adjustment
+    referenceType: text("reference_type"),
     referenceId: uuid("reference_id"),
     description: text("description"),
     performedById: uuid("performed_by_id").references(() => users.id),
@@ -149,7 +137,6 @@ export const currentAccountTransactions = pgTable(
 
 export const collectionStatusEnum = pgEnum("collection_status", ["received", "void"]);
 
-/** Cari tahsilat kaydı. */
 export const collections = pgTable(
   "collections",
   {
@@ -160,7 +147,7 @@ export const collections = pgTable(
     amountKurus: integer("amount_kurus").notNull(),
     collectedAt: timestamp("collected_at", { withTimezone: true }).notNull().defaultNow(),
     status: collectionStatusEnum("status").notNull().default("received"),
-    method: text("method"), // nakit | havale | kredi kartı ...
+    method: text("method"),
     note: text("note"),
     collectedById: uuid("collected_by_id").references(() => users.id),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -169,5 +156,29 @@ export const collections = pgTable(
   (table) => [
     index("collections_customer_date_idx").on(table.customerId, table.collectedAt),
     index("collections_status_idx").on(table.status),
+  ]
+);
+
+export const invoiceStatusEnum = pgEnum("invoice_status", ["draft", "issued", "paid", "cancelled"]);
+
+export const invoices = pgTable(
+  "invoices",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    customerId: uuid("customer_id")
+      .notNull()
+      .references(() => customers.id, { onDelete: "cascade" }),
+    invoiceNo: text("invoice_no").unique(), // Fatura kesilince verilir
+    totalKurus: integer("total_kurus").notNull(),
+    taxKurus: integer("tax_kurus").notNull(),
+    status: invoiceStatusEnum("status").notNull().default("draft"),
+    dueDate: timestamp("due_date", { withTimezone: true }),
+    issuedAt: timestamp("issued_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("invoices_customer_date_idx").on(table.customerId, table.createdAt),
+    index("invoices_status_idx").on(table.status),
   ]
 );

@@ -102,21 +102,32 @@ export function EditCustomerForm({
             <option value="passive">Pasif</option>
           </Select>
 
-          <div className="col-span-full mt-4 flex items-center justify-between border-t border-panel-secondary pt-4">
-            {/* Silme formu kendi form tag'ine sahip olamaz (form içinde form olmaz). Bu yüzden dış grid içine koydum ve düzenleme formunu ayrı sardım. */}
-            <div className="flex justify-end gap-2 ml-auto">
-              <Button type="button" variant="secondary" onClick={() => setIsEditing(false)} disabled={pending || isDeleting}>
-                Vazgeç
-              </Button>
-              <Button type="submit" loading={pending} disabled={isDeleting} className="gap-2">
-                <Check className="h-4 w-4" />
-                Kaydet
-              </Button>
+          <div className="sm:col-span-2 pt-2 border-t border-panel-secondary mt-2">
+            <h4 className="text-sm font-semibold text-foreground mb-3">Güvenlik Bilgileri</h4>
+            <div className="sm:col-span-1 max-w-sm">
+              <Input 
+                label="Şifreyi Değiştir" 
+                name="newPassword" 
+                type="password" 
+                placeholder="Değiştirmek için yeni şifre girin" 
+                minLength={6} 
+                help="Boş bırakılırsa müşterinin şifresi değişmez."
+              />
             </div>
+          </div>
+
+          <div className="col-span-full mt-4 flex items-center justify-end border-t border-panel-secondary pt-4 gap-2">
+            <Button type="button" variant="secondary" onClick={() => setIsEditing(false)} disabled={pending || isDeleting}>
+              Vazgeç
+            </Button>
+            <Button type="submit" loading={pending} disabled={isDeleting} className="gap-2">
+              <Check className="h-4 w-4" />
+              Kaydet
+            </Button>
           </div>
         </form>
 
-        <form action={deleteAction} className="col-span-full -mt-[3.75rem]">
+        <form action={deleteAction} className="col-span-full border-t border-panel-secondary pt-4 flex justify-start">
            <input type="hidden" name="customerId" value={customer.id} />
            <Button 
             type="submit" 

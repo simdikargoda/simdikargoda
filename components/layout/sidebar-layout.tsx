@@ -52,7 +52,7 @@ export function SidebarLayout({ children, user }: { children: ReactNode; user?: 
         {/* Content */}
         <div className={cn(
           "flex min-h-screen flex-col transition-all duration-300",
-          isCollapsed ? "lg:pl-20" : "lg:pl-64"
+          isCollapsed ? "lg:pl-20" : "lg:pl-[280px]"
         )}>
           {/* Gelecekte mobile sidebar toggle'ı header'dan tetiklemek için Context kullanılabilir. 
               Şu anki header bağımsız duruyor, eğer panel-header mobile toggle içeriyorsa, onu da buraya entegre edebiliriz. 

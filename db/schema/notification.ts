@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 import { users } from "@/db/schema/auth";
@@ -43,4 +44,18 @@ export const smsMessages = pgTable(
     index("sms_customer_status_idx").on(table.customerId, table.status),
     index("sms_created_at_idx").on(table.createdAt),
   ]
+);
+
+export const smsTemplates = pgTable(
+  "sms_templates",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    eventType: text("event_type").notNull().unique(), // e.g. shipment_created
+    name: text("name").notNull(),
+    content: text("content").notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+    variables: jsonb("variables").notNull().default('[]'),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  }
 );

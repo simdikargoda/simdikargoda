@@ -1,6 +1,8 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { CurrentAccountsTable } from "./current-accounts-table";
 import { getCurrentAccounts } from "@/lib/queries/finance.queries";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,12 @@ export default async function CariHesaplarPage({
       <PageHeader
         title="Cari Hesaplar"
         description="Cari müşterilerin güncel borç/alacak durumlarını, limitlerini ve tahsilatlarını yönetin."
+        actions={
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Tahsilat Gir
+          </Button>
+        }
       />
       <CurrentAccountsTable accounts={filtered} initialQ={q} />
     </div>

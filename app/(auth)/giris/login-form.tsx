@@ -160,6 +160,24 @@ export function LoginForm() {
         )}
         {isLoginPending ? "Giriş yapılıyor..." : "Giriş Yap"}
       </button>
+
+      <div className="relative mt-8 mb-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-panel-secondary/80" />
+        </div>
+        <div className="relative flex justify-center text-xs">
+          <span className="bg-white px-3 text-muted">veya</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        disabled
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-panel-secondary bg-white px-4 py-2.5 text-sm font-semibold text-muted shadow-sm transition-all duration-150 cursor-not-allowed"
+      >
+        <ShieldCheck className="h-4 w-4" />
+        SSO ile giriş yap (Çok Yakında)
+      </button>
     </form>
   );
 }

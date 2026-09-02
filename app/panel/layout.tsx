@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { LogOut, Package, User } from "lucide-react";
+import { LogOut, Package, Shield } from "lucide-react";
 import Link from "next/link";
 
 import { requireAuth } from "@/lib/guard";
@@ -12,9 +12,6 @@ export default async function PanelLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await requireAuth();
-  if (session.role === "admin") {
-    redirect("/yonetim");
-  }
 
   const db = getDb();
   const user = await db.query.users.findFirst({
@@ -43,6 +40,16 @@ export default async function PanelLayout({
         </div>
 
         <div className="flex items-center gap-4">
+          {session.role === "admin" && (
+            <Link
+              href="/yonetim"
+              className="flex h-10 items-center gap-2 rounded-xl bg-panel-secondary px-4 text-sm font-semibold text-muted transition hover:bg-panel-secondary/80 hover:text-foreground shadow-sm"
+              title="Yönetici Paneline Dön"
+            >
+              <Shield className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline-block">Yönetici Paneline Dön</span>
+            </Link>
+          )}
           <Link
             href="/profil"
             title="Profil"

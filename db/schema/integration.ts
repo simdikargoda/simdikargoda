@@ -23,14 +23,13 @@ export const integrationStatusEnum = pgEnum("integration_status", [
   "disabled",
 ]);
 
-/** Kargo firması + Netgsm gibi servislerin config durumunu gösterir. */
 export const integrations = pgTable(
   "integrations",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     provider: text("provider").notNull().unique(), // aras | dhl | hepsijet | ptt | netgsm
     status: integrationStatusEnum("status").notNull().default("unconfigured"),
-    configured: boolean().notNull().default(false),
+    configured: boolean("configured").notNull().default(false),
     lastTestAt: timestamp("last_test_at", { withTimezone: true }),
     lastTestResult: jsonb("last_test_result"),
     note: text("note"),
@@ -40,24 +39,62 @@ export const integrations = pgTable(
   (table) => [index("integrations_provider_idx").on(table.provider)]
 );
 
-/** Kritik yönetim işlemlerinin audit izi. */
 export const auditLogs = pgTable(
   "audit_logs",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     actorUserId: uuid("actor_user_id"),
-    action: text("action").notNull(), // e.g. customer.updated, price.changed
+    action: text("action").notNull(),
     entityType: text("entity_type").notNull(),
     entityId: text("entity_id"),
     customerId: uuid("customer_id").references(() => customers.id, {
       onDelete: "set null",
     }),
-    raw: jsonb("raw"), // değişim özeti (hassas secret İÇERMEZ)
+    raw: jsonb("raw"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index("audit_entity_idx").on(table.entityType, table.entityId),
     index("audit_customer_idx").on(table.customerId),
     index("audit_created_at_idx").on(table.createdAt),
+  ]
+);
+
+export const webhooks = pgTable(
+  "webhooks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    customerId: uuid("customer_id").references(() => customers.id, {
+      onDelete: "cascade",
+    }), // Eğer admin webhook'u ise null olabilir
+    url: text("url").notNull(),
+    secret: text("secret").notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("webhooks_customer_idx").on(table.customerId),
+    index("webhooks_active_idx").on(table.isActive),
+  ]
+);
+
+export const apiKeys = pgTable(
+  "api_keys",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    customerId: uuid("customer_id").references(() => customers.id, {
+      onDelete: "cascade",
+    }).notNull(),
+    name: text("name").notNull(),
+    key: text("key").notNull().unique(),
+    lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+  },
+  (table) => [
+    index("api_keys_customer_idx").on(table.customerId),
+    index("api_keys_active_idx").on(table.isActive),
   ]
 );

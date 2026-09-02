@@ -28,11 +28,11 @@ export const dynamic = "force-dynamic";
 
 export default async function PanelDashboardPage() {
   const session = await requireAuth();
-  if (session.role === "admin") {
-    redirect("/yonetim");
-  }
 
   if (!session.customerId) {
+    if (session.role === "admin") {
+      redirect("/api/auth/provision-admin");
+    }
     redirect("/giris");
   }
   const customerId = session.customerId;

@@ -2,6 +2,7 @@ import { requireStaff } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Truck } from "lucide-react";
 import { formatKurus } from "@/lib/money";
 import { getRevenueReport } from "@/lib/services/reports/reports.service";
 
@@ -31,7 +32,7 @@ export default async function KargoFirmasiRaporlarPage() {
           Firma Bazlı Rapor
         </div>
         {revenue.length === 0 ? (
-          <EmptyState title="Veri yok" description="Henüz firma kaydı bulunmuyor." />
+          <EmptyState icon={Truck} title="Veri yok" description="Henüz firma kaydı bulunmuyor." />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">

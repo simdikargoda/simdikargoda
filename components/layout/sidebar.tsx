@@ -192,6 +192,7 @@ const NAV_SECTIONS = [
           { href: "/yonetim/kullanicilar", label: "Tüm Kullanıcılar", icon: Users, exact: true },
           { href: "/yonetim/kullanicilar/aktif", label: "Aktif Kullanıcılar", icon: UserCog, exact: true },
           { href: "/yonetim/kullanicilar/pasif", label: "Pasif Kullanıcılar", icon: X, exact: true },
+          { href: "/yonetim/departmanlar", label: "Departmanlar", icon: Users, exact: true },
         ],
       },
       {
@@ -426,7 +427,7 @@ export function Sidebar({ isCollapsed, user }: { isCollapsed?: boolean; user?: a
   return (
     <aside className={cn(
       "fixed inset-y-0 left-0 z-[100] pointer-events-auto hidden flex-col border-r-0 bg-slate-900 shadow-[4px_0_24px_rgba(0,0,0,0.05)] lg:flex transition-all duration-300",
-      isCollapsed ? "w-20" : "w-64"
+      isCollapsed ? "w-20" : "w-[280px]"
     )}>
       <NavContent pathname={pathname} isCollapsed={isCollapsed} user={user} />
     </aside>

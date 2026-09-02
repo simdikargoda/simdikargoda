@@ -18,6 +18,18 @@ export const userRoleEnum = pgEnum("user_role", ["admin", "customer"]);
 
 export const userStatusEnum = pgEnum("user_status", ["active", "passive"]);
 
+export const departments = pgTable(
+  "departments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull().unique(),
+    description: text("description"),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  }
+);
+
 /** Rol bazlı yetki kontrolünü merkezi yapan kayıt. */
 export const users = pgTable(
   "users",
@@ -40,6 +52,9 @@ export const users = pgTable(
 
     // customer rolündeki kullanıcının bağlı olduğu müşteri (tenant)
     customerId: uuid("customer_id"),
+
+    // admin rolündeki kullanıcının bağlı olduğu departman
+    departmentId: uuid("department_id").references(() => departments.id, { onDelete: "set null" }),
     
     // Brute-force koruması
     failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
@@ -51,6 +66,7 @@ export const users = pgTable(
   (table) => [
     uniqueIndex("users_email_idx").on(table.email),
     index("users_customer_id_idx").on(table.customerId),
+    index("users_department_id_idx").on(table.departmentId),
     index("users_role_idx").on(table.role),
   ]
 );
