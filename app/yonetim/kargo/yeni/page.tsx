@@ -1,11 +1,11 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getCustomerOptions } from "@/lib/queries/customer.queries";
 import NewShipmentForm from "./new-shipment-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function YeniKargoPage() {
-  await requireStaff();
+  await requireAdmin();
   const customers = await getCustomerOptions();
 
   return (

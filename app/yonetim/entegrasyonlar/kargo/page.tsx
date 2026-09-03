@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Truck } from "lucide-react";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getAllProviderStatuses } from "@/lib/providers/cargo/registry";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ const PROVIDER_LABEL: Record<string, string> = {
  * "Doküman Bekleniyor" durumunda listelenir; sahte durum yoktur.
  */
 export default async function KargoEntegrasyonlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const statuses = getAllProviderStatuses();
 
   const list = Object.entries(statuses).map(([id, st]) => ({

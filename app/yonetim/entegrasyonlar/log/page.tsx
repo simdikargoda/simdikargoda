@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getAuditLogs } from "@/lib/services/finance/audit.service";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * içermez; hassas bilgiler kaydedilmez.
  */
 export default async function EntegrasyonLoglarPage() {
-  await requireStaff();
+  await requireAdmin();
   let logs = await getAuditLogs(100);
   
   if (!logs || logs.length === 0) {

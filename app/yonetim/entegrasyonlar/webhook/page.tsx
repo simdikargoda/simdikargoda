@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
  * Secret tarayıcıya yansıtılmaz.
  */
 export default async function WebhooklarPage() {
-  await requireStaff();
+  await requireAdmin();
 
   return (
     <div className="space-y-6">

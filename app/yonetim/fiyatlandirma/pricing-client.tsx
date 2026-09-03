@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatKurus } from "@/lib/money";
-import { Plus, Edit2, Trash2, MoreHorizontal } from "lucide-react";
+import { Plus, Edit2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function PricingClient({

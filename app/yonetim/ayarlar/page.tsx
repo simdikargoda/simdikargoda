@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { getAllProviderStatuses } from "@/lib/providers/cargo/registry";
 import { netgsmConfigured } from "@/lib/services/notifications/netgsm.service";
@@ -8,7 +8,7 @@ import { StatusBadge, type StatusBadgeColor } from "@/components/ui/status-badge
 export const dynamic = "force-dynamic";
 
 export default async function AyarlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const providerStatuses = getAllProviderStatuses();
   const smsConfigured = netgsmConfigured();
 

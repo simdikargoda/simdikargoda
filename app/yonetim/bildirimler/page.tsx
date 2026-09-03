@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { netgsmConfigured } from "@/lib/services/notifications/netgsm.service";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
  * SMS gönderim/log yönetimine bağlanır (duplicate menü engellenir).
  */
 export default async function BildirimAyarlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const configured = netgsmConfigured();
 
   return (

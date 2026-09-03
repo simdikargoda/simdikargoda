@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { getDb } from "@/db/client";
 import { customers } from "@/db/schema/customer";
 import { eq } from "drizzle-orm";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { EditCustomerForm } from "./edit-customer-form";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export default async function CustomerDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const { id } = await params;
   const db = getDb();

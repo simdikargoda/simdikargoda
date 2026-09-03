@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { getCustomPrices } from "@/lib/queries/pricing.queries";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { CustomPricesTable } from "./custom-prices-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -12,7 +12,7 @@ export default async function CustomPricingPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const prices = await getCustomPrices();
   const params = await searchParams;

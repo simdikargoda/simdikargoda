@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 /** Kargo firması raporları: provider bazlı dağılım. */
 export default async function KargoFirmasiRaporlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const revenue = await getRevenueReport();
 
   const totalProfit = revenue.reduce((s, r) => s + r.profitKurus, 0);

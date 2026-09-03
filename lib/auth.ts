@@ -24,7 +24,7 @@ export interface SessionPayload {
 }
 
 /** Kullanıcı adına imzalanmış bir JWT token + DB session oluşturur. */
-export async function createSession(userId: string, userAgent?: string, ipAddress?: string): Promise<string> {
+export async function createSession(userId: string, userAgent?: string, ipAddress?: string, rememberMe = false): Promise<string> {
   const cfg = getServerConfig();
   const secret = new TextEncoder().encode(cfg.authSecret);
 
@@ -35,6 +35,8 @@ export async function createSession(userId: string, userAgent?: string, ipAddres
     throw new AppError("UNAUTHORIZED", "Kullanıcı bulunamadı.", 401);
   }
 
+  const durationSeconds = rememberMe ? REMEMBER_ME_DURATION_SECONDS : SESSION_DURATION_SECONDS;
+
   const token = await new SignJWT({
     userId: user.id,
     role: user.role,
@@ -44,7 +46,7 @@ export async function createSession(userId: string, userAgent?: string, ipAddres
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(`${SESSION_DURATION_SECONDS}s`)
+    .setExpirationTime(`${durationSeconds}s`)
     .sign(secret);
 
   // Token hash'ini DB'ye kaydet (raw token DB'de tutulmaz).
@@ -56,7 +58,7 @@ export async function createSession(userId: string, userAgent?: string, ipAddres
     tokenHash,
     userAgent: userAgent ?? null,
     ipAddress: ipAddress ?? null,
-    expiresAt: new Date(Date.now() + SESSION_DURATION_SECONDS * 1000),
+    expiresAt: new Date(Date.now() + durationSeconds * 1000),
   });
 
   return token;

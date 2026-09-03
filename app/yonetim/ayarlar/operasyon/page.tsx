@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
  * bu sürümde kapsam dışıdır. Gösterim gerçek, placeholder değildir.
  */
 export default async function OperasyonAyarlarPage() {
-  await requireStaff();
+  await requireAdmin();
 
   return (
     <div>

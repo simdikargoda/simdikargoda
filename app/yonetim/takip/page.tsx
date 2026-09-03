@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getShipmentById } from "@/lib/queries/shipment.queries";
 import { getShipmentStatusHistory } from "@/lib/queries/shipment.queries";
 
@@ -17,7 +17,7 @@ export default async function TakipPage({
 }: {
   searchParams: Promise<{ no?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   const { no = "" } = await searchParams;
   const trackingNo = no.trim();
 

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { customerCargoPrices, priceChangeAudit } from "@/db/schema/pricing";
 import { customers } from "@/db/schema/customer";
@@ -24,6 +24,22 @@ export async function getCustomPrices() {
     .from(customerCargoPrices)
     .innerJoin(customers, eq(customers.id, customerCargoPrices.customerId))
     .orderBy(desc(customerCargoPrices.createdAt));
+}
+
+export async function getCustomerPrices(customerId: string) {
+  const db = getDb();
+  return db
+    .select({
+      id: customerCargoPrices.id,
+      provider: customerCargoPrices.provider,
+      type: customerCargoPrices.type,
+      priceKurus: customerCargoPrices.priceKurus,
+      breakpoint: customerCargoPrices.breakpoint,
+      isActive: customerCargoPrices.isActive,
+    })
+    .from(customerCargoPrices)
+    .where(and(eq(customerCargoPrices.customerId, customerId), eq(customerCargoPrices.isActive, true)))
+    .orderBy(customerCargoPrices.provider);
 }
 
 export async function getPriceAuditLogs() {

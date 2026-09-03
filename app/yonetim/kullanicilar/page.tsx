@@ -4,14 +4,14 @@ import { getDb } from "@/db/client";
 import { users } from "@/db/schema/auth";
 import { desc, ne } from "drizzle-orm";
 import Link from "next/link";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const metadata = {
   title: "Sistem Kullanıcıları | Şimdi Kargoda",
 };
 
 export default async function KullanicilarPage() {
-  await requireStaff();
+  await requireAdmin();
   const db = getDb();
   
   // Sadece müşteri olmayan (sistem) kullanıcılarını çek

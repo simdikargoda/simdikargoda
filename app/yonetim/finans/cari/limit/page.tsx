@@ -1,5 +1,5 @@
 import CurrentAccountTransactionsPage from "@/components/finance/current-account-transactions-page";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +10,6 @@ export const dynamic = "force-dynamic";
  * verisine yönlendirilir (kopyalanmaz).
  */
 export default async function LimitDurumlarPage() {
-  await requireStaff();
+  await requireAdmin();
   return <CurrentAccountTransactionsPage />;
 }

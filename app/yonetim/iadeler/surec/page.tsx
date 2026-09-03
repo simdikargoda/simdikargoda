@@ -1,10 +1,10 @@
 import ReturnsListPage from "@/components/returns/returns-list-page";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
 export default async function IadeSurecindekilerPage() {
-  await requireStaff();
+  await requireAdmin();
   return (
     <ReturnsListPage
       title="İade Sürecindekiler"

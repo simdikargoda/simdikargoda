@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { getApiKeys } from "@/lib/queries/integration.queries";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { ApiKeysTable } from "./api-keys-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -12,7 +12,7 @@ export default async function ApiKeysPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const keys = await getApiKeys();
   const params = await searchParams;

@@ -8,6 +8,14 @@ out
 .env.local
 .env.production
 .env*.local
+.env.local*
+.env.production*
+
+# Build and Patch files
+*.tsbuildinfo
+*.orig
+*.rej
+*.patch
 
 # Database
 *.db

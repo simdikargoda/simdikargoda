@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { getDepartments } from "@/lib/queries/department.queries";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { DepartmentsTable } from "./departments-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -12,7 +12,7 @@ export default async function DepartmanlarPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const depts = await getDepartments();
   const params = await searchParams;

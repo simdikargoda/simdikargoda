@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getDb } from "@/db/client";
 import { customers } from "@/db/schema/customer";
 import { eq } from "drizzle-orm";
@@ -10,7 +10,7 @@ import { ArrowLeft } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function TopluKargoExcelPage() {
-  await requireStaff();
+  await requireAdmin();
 
   const db = getDb();
   const customerList = await db.query.customers.findMany({

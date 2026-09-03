@@ -1,13 +1,13 @@
 "use server";
 
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getDb } from "@/db/client";
 import { smsTemplates } from "@/db/schema/notification";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function createDefaultTemplates() {
-  await requireStaff();
+  await requireAdmin();
   const db = getDb();
   
   const existing = await db.query.smsTemplates.findMany();
@@ -40,7 +40,7 @@ export async function createDefaultTemplates() {
 }
 
 export async function updateTemplateAction(id: string, content: string, isActive: boolean) {
-  await requireStaff();
+  await requireAdmin();
   const db = getDb();
 
   await db.update(smsTemplates)

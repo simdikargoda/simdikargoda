@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
  * ve müşteri bazlı dağılım. Kârlılık, kalıcı snapshot değerlerden hesaplanır.
  */
 export default async function GonderiRaporlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const [revenue, customers] = await Promise.all([
     getRevenueReport(),
     getCustomerReport(),

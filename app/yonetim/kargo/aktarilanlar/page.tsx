@@ -1,10 +1,10 @@
 import ShipmentListPage from "@/components/shipments/shipment-list-page";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
 export default async function KargoyaAktarilanlarPage() {
-  await requireStaff();
+  await requireAdmin();
   return (
     <ShipmentListPage
       title="Kargoya Aktarılanlar"

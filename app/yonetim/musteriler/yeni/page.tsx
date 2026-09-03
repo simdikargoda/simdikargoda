@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +8,6 @@ export const dynamic = "force-dynamic";
  * (NewCustomerButton). Ayrı bir rota yerine listeye yönlendirir.
  */
 export default async function YeniMusteriOlusturPage() {
-  await requireStaff();
+  await requireAdmin();
   redirect("/yonetim/musteriler");
 }

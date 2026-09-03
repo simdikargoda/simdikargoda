@@ -21,25 +21,18 @@ export async function requireAuth(): Promise<AuthContext> {
   return session;
 }
 
-/** Yönetici veya operasyon personeli gerektiren işlemler. */
-export async function requireStaff(): Promise<AuthContext> {
+export async function requireAdmin(): Promise<AuthContext> {
   const session = await requireAuth();
   if (session.role !== "admin") {
-    if (session.role === "customer") {
-      redirect("/panel");
-    }
     redirect("/giris");
   }
   return session;
 }
 
-export async function requireAdmin(): Promise<AuthContext> {
-  const session = await requireAuth();
-  if (session.role !== "admin") {
-    redirect("/yonetim");
-  }
-  return session;
-}
+/** Yönetici veya operasyon personeli gerektiren işlemler. Deprecated: Use requireAdmin instead. */
+export const requireStaff = requireAdmin;
+
+
 
 /**
  * Tenant/customer isolation: Aksi durumda membership + object-level

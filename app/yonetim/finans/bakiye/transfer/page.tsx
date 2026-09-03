@@ -1,5 +1,5 @@
 import BalanceTransactionsPage from "@/components/finance/balance-transactions-page";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +10,6 @@ export const dynamic = "force-dynamic";
  * veri kaynağı olan bakiye hareketleri görünümüne bağlanır.
  */
 export default async function BankaTransferleriPage() {
-  await requireStaff();
+  await requireAdmin();
   return <BalanceTransactionsPage />;
 }

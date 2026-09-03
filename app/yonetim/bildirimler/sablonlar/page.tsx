@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getDb } from "@/db/client";
 import { TemplateList } from "./template-list";
 import { createDefaultTemplates } from "./actions";
@@ -7,7 +7,7 @@ import { createDefaultTemplates } from "./actions";
 export const dynamic = "force-dynamic";
 
 export default async function MesajSablonlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const db = getDb();
 
   // Şablonları getir, yoksa oluştur

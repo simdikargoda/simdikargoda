@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Users } from "lucide-react";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 /** Müşteri raporları: gerçek DB verisi üzerinden müşteri bazlı dağılım. */
 export default async function MusteriRaporlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const [byCustomer, customers] = await Promise.all([
     getCustomerReport(),
     getCustomers(),

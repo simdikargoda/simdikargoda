@@ -81,16 +81,16 @@ export function LoginForm() {
           htmlFor="email"
           className="mb-1.5 block text-sm font-medium text-foreground"
         >
-          E-posta
+          E-posta veya Kullanıcı Adı
         </label>
         <input
           id="email"
           name="email"
-          type="email"
-          autoComplete="email"
+          type="text"
+          autoComplete="username"
           required
           className={`${inputBase} border-panel-secondary focus:border-primary focus:ring-primary/30`}
-          placeholder="ornek@firma.com"
+          placeholder="ornek@firma.com veya kullaniciadi"
         />
       </div>
 

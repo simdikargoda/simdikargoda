@@ -1,10 +1,10 @@
 import AuditLogsPage from "@/components/audit/audit-logs-page";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
 export default async function ApiWebhookLoglarPage() {
-  await requireStaff();
+  await requireAdmin();
   return (
     <AuditLogsPage
       title="API / Webhook Logları"

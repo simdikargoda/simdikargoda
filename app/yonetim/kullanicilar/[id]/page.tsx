@@ -8,8 +8,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema/auth";
 import { eq } from "drizzle-orm";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { AdminPasswordForm } from "./admin-password-form";
+import { AdminNameForm } from "./admin-name-form";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function UserDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const { id } = await params;
   const db = getDb();
@@ -96,7 +97,7 @@ export default async function UserDetailPage({
 
         {/* Sağ Kolon: Düzenleme ve İşlemler */}
         <div className="space-y-6">
-          {/* Burada ileride kullanıcı düzenleme formu da olabilir */}
+          <AdminNameForm userId={targetUser.id} currentName={targetUser.name} />
           <AdminPasswordForm userId={targetUser.id} />
         </div>
       </div>

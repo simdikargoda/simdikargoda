@@ -35,8 +35,8 @@ export function encryptSecret(secret: string): string {
   encrypted += cipher.final("base64");
   const authTag = cipher.getAuthTag().toString("base64");
   
-  // Format: iv:authTag:encryptedData
-  return `${iv.toString("base64")}:${authTag}:${encrypted}`;
+  // Format: v1:iv:authTag:encryptedData
+  return `v1:${iv.toString("base64")}:${authTag}:${encrypted}`;
 }
 
 /** Şifrelenmiş MFA Secret'ı çözer */
@@ -48,13 +48,21 @@ export function decryptSecret(encryptedSecret: string): string {
   }
 
   const parts = encryptedSecret.split(":");
-  if (parts.length !== 3) {
+  
+  let ivBase64, authTagBase64, encryptedData;
+
+  if (parts[0] === "v1" && parts.length === 4) {
+    // New versioned format
+    [, ivBase64, authTagBase64, encryptedData] = parts;
+  } else if (parts.length === 3) {
+    // Legacy format (no version prefix)
+    [ivBase64, authTagBase64, encryptedData] = parts;
+  } else {
     // Düzmetin (plaintext) saklanmış secret kabul edilmez.
     // Production güvenliği: şifrelenmemiş veri olarak işlemek reddedilir.
     throw new Error("MFA secret güvenli formatta (şifreli) kaydedilmemiş. Yeniden kurulum gerekir.");
   }
 
-  const [ivBase64, authTagBase64, encryptedData] = parts;
   const keyBuffer = Buffer.from(encryptionKey, "hex");
   const iv = Buffer.from(ivBase64, "base64");
   const authTag = Buffer.from(authTagBase64, "base64");

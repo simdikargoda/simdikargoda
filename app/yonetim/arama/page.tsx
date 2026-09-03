@@ -3,7 +3,7 @@ import { ArrowRight, Package, Users } from "lucide-react";
 
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { listShipments } from "@/lib/services/tracking/tracking.service";
 import { getCustomers } from "@/lib/queries/customer.queries";
 
@@ -18,7 +18,7 @@ export default async function AramaSayfasi({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   const { q = "" } = await searchParams;
   const query = q.trim();
 

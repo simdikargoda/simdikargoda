@@ -196,13 +196,6 @@ const NAV_SECTIONS = [
         ],
       },
       {
-        label: "Roller & Yetkiler",
-        icon: ShieldCheck,
-        children: [
-          { href: "/yonetim/roller", label: "Roller & Yetkiler", icon: ShieldCheck, exact: true },
-        ],
-      },
-      {
         label: "Sistem Logları",
         icon: ScrollText,
         children: [

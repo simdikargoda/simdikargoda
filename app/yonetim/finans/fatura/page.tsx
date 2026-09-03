@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { getInvoices } from "@/lib/queries/invoice.queries";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { InvoicesTable } from "./invoices-table";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ export default async function FaturalarPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const invoices = await getInvoices();
   const params = await searchParams;

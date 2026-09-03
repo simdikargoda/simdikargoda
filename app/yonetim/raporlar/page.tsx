@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getAdminDashboardData } from "@/lib/services/reports/reports.service";
 import { PageHeader } from "@/components/ui/page-header";
 import { ShipmentTrendChart, RevenueTrendChart } from "@/components/widgets/dashboard-charts";
@@ -8,7 +8,7 @@ import { formatKurus } from "@/lib/money";
 export const dynamic = "force-dynamic";
 
 export default async function RaporlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const data = await getAdminDashboardData();
 
   const providerChartData = data.byProvider.map((p) => ({

@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import path from "path";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export type NetgsmConfigState = {
   error?: string;
@@ -13,7 +13,7 @@ export async function saveNetgsmConfig(
   _prev: NetgsmConfigState,
   formData: FormData
 ): Promise<NetgsmConfigState> {
-  await requireStaff();
+  await requireAdmin();
 
   const usercode = formData.get("usercode")?.toString() || "";
   const password = formData.get("password")?.toString() || "";
@@ -57,7 +57,7 @@ export async function saveNetgsmConfig(
 }
 
 export async function testNetgsmConfig(formData: FormData): Promise<{ success?: boolean; error?: string }> {
-  await requireStaff();
+  await requireAdmin();
   
   const usercode = formData.get("usercode")?.toString() || "";
   const password = formData.get("password")?.toString() || "";

@@ -1,6 +1,6 @@
 import { DashboardClient } from "@/components/widgets/dashboard-client";
 import { getAdminDashboardData } from "@/lib/services/reports/reports.service";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema/auth";
 import { eq } from "drizzle-orm";
@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default async function YonetimDashboardPage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
-  const session = await requireStaff();
+  const session = await requireAdmin();
   const sp = await searchParams;
   const range = sp.range || "Bugün";
   const data = await getAdminDashboardData(range);

@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { getPriceAuditLogs } from "@/lib/queries/pricing.queries";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { PriceAuditTable } from "./price-audit-table";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export default async function PriceHistoryPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const logs = await getPriceAuditLogs();
   const params = await searchParams;

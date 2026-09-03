@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { getIntegrations } from "@/lib/queries/integration.queries";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { IntegrationsTable } from "./integrations-table";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export default async function IntegrationsPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   
   const integrations = await getIntegrations();
   const params = await searchParams;

@@ -2,7 +2,7 @@
 
 import { exec } from "child_process";
 import { promisify } from "util";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 const execAsync = promisify(exec);
 
@@ -17,7 +17,7 @@ export async function gitPushAction(
   _prev: GitActionState,
   _formData: FormData
 ): Promise<GitActionState> {
-  await requireStaff();
+  await requireAdmin();
   try {
     const { stdout, stderr } = await execAsync(
       'git add . && git commit -m "Auto backup from SaaS panel" && git push origin main'
@@ -48,7 +48,7 @@ export async function gitPullAction(
   _prev: GitActionState,
   _formData: FormData
 ): Promise<GitActionState> {
-  await requireStaff();
+  await requireAdmin();
   try {
     const { stdout, stderr } = await execAsync("git pull origin main");
     const isUpToDate = stdout.includes("Already up to date");

@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatKurus } from "@/lib/money";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
  * Fake satır üretilmez.
  */
 export default async function IadeRaporlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const shipments = await listShipments({ status: "returned", limit: 100 });
 
   const totalRefund = shipments.reduce((s, sh) => s + sh.salePriceKurus, 0);

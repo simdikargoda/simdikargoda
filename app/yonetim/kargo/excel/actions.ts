@@ -1,7 +1,7 @@
 "use server";
 
 import ExcelJS from "exceljs";
-import { requireStaff, assertCustomerScope } from "@/lib/guard";
+import { requireAdmin, assertCustomerScope } from "@/lib/guard";
 import { createShipment } from "@/lib/services/shipment/create-shipment.service";
 import { getCustomerWithAccounts } from "@/lib/services/customer.service";
 import { z } from "zod";
@@ -34,7 +34,7 @@ export async function uploadExcelAction(
   _prev: UploadExcelState,
   formData: FormData
 ): Promise<UploadExcelState> {
-  const session = await requireStaff();
+  const session = await requireAdmin();
 
   try {
 

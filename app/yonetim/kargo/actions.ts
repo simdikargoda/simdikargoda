@@ -2,11 +2,10 @@
 
 import { z } from "zod";
 
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { AppError } from "@/lib/errors";
 import { assertCustomerScope } from "@/lib/guard";
 import { createShipment } from "@/lib/services/shipment/create-shipment.service";
-import { getCustomerOptions } from "@/lib/queries/customer.queries";
 
 const createShipmentSchema = z.object({
   customerId: z.string().min(1, "Müşteri seçin."),
@@ -37,7 +36,7 @@ export async function createShipmentAction(
   _prev: CreateShipmentState,
   formData: FormData
 ): Promise<CreateShipmentState> {
-  const session = await requireStaff();
+  const session = await requireAdmin();
 
   try {
     const parsed = createShipmentSchema.safeParse({

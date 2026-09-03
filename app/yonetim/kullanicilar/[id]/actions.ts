@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 import { getDb } from "@/db/client";
 import { users, sessions } from "@/db/schema/auth";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { AppError } from "@/lib/errors";
 
 const adminPasswordSchema = z.object({
@@ -17,7 +17,7 @@ const adminPasswordSchema = z.object({
 
 export async function adminChangePasswordAction(_prev: any, formData: FormData): Promise<{ error?: string; success?: string }> {
   try {
-    await requireStaff();
+    await requireAdmin();
     
     const parsed = adminPasswordSchema.safeParse({
       userId: formData.get("userId"),
@@ -44,3 +44,35 @@ export async function adminChangePasswordAction(_prev: any, formData: FormData):
     return { error: err.message || "Bilinmeyen bir hata oluştu." };
   }
 }
+
+const adminNameSchema = z.object({
+  userId: z.string().uuid(),
+  newName: z.string().min(2, "Kullanıcı adı en az 2 karakter olmalıdır."),
+});
+
+export async function adminChangeNameAction(_prev: any, formData: FormData): Promise<{ error?: string; success?: string }> {
+  try {
+    await requireAdmin();
+    
+    const parsed = adminNameSchema.safeParse({
+      userId: formData.get("userId"),
+      newName: formData.get("newName"),
+    });
+
+    if (!parsed.success) {
+      return { error: parsed.error.issues[0]?.message };
+    }
+
+    const db = getDb();
+    const targetUser = await db.query.users.findFirst({ where: eq(users.id, parsed.data.userId) });
+    if (!targetUser) throw new AppError("NOT_FOUND", "Kullanıcı bulunamadı.", 404);
+
+    await db.update(users).set({ name: parsed.data.newName }).where(eq(users.id, targetUser.id));
+
+    revalidatePath(`/yonetim/kullanicilar/${targetUser.id}`);
+    return { success: "Kullanıcı adı başarıyla değiştirildi." };
+  } catch (err: any) {
+    return { error: err.message || "Bilinmeyen bir hata oluştu." };
+  }
+}
+

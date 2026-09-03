@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { netgsmConfigured } from "@/lib/services/notifications/netgsm.service";
 import { NetgsmForm } from "./netgsm-form";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /** Netgsm ayarları: yapılandırma durumunu gerçek env config üzerinden gösterir. */
 export default async function NetgsmAyarlarPage() {
-  await requireStaff();
+  await requireAdmin();
   const configured = netgsmConfigured();
 
   return (

@@ -45,3 +45,20 @@ export async function getShipmentStatusHistory(shipmentId: string) {
     .where(eq(shipmentStatusHistory.shipmentId, shipmentId))
     .orderBy(shipmentStatusHistory.createdAt);
 }
+
+export async function getShipmentsByCustomerId(customerId: string) {
+  const db = getDb();
+  return db
+    .select({
+      id: shipments.id,
+      trackingNumber: shipments.trackingNumber,
+      barcode: shipments.barcode,
+      status: shipments.status,
+      provider: shipments.provider,
+      receiverName: shipments.receiverName,
+      createdAt: shipments.createdAt,
+    })
+    .from(shipments)
+    .where(eq(shipments.customerId, customerId))
+    .orderBy(shipments.createdAt);
+}

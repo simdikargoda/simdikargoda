@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { AppError } from "@/lib/errors";
 import { tlToKurus } from "@/lib/money";
 import { createCustomer } from "@/lib/services/customer.service";
@@ -33,7 +33,7 @@ export async function createCustomerAction(
   _prev: CreateCustomerState,
   formData: FormData
 ): Promise<CreateCustomerState> {
-  const session = await requireStaff();
+  const session = await requireAdmin();
 
   const parsed = createCustomerSchema.safeParse({
     name: formData.get("name"),
@@ -128,7 +128,7 @@ export async function updateCustomerAction(
   _prev: UpdateCustomerState,
   formData: FormData
 ): Promise<UpdateCustomerState> {
-  const session = await requireStaff();
+  const session = await requireAdmin();
 
   const parsed = updateCustomerSchema.safeParse({
     customerId: formData.get("customerId"),
@@ -209,7 +209,7 @@ export async function deleteCustomerAction(
   _prev: DeleteCustomerState,
   formData: FormData
 ): Promise<DeleteCustomerState> {
-  const session = await requireStaff();
+  const session = await requireAdmin();
 
   const parsed = deleteCustomerSchema.safeParse({
     customerId: formData.get("customerId"),

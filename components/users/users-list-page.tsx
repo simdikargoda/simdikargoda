@@ -5,7 +5,7 @@ import { users } from "@/db/schema/auth";
 import { desc, ne } from "drizzle-orm";
 import Link from "next/link";
 import { Edit, Shield } from "lucide-react";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function UsersListPage({
   description: string;
   status?: "active" | "passive";
 }) {
-  await requireStaff();
+  await requireAdmin();
   const db = getDb();
   const rows = await db
     .select()

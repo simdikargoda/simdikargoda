@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { cookies, headers } from "next/headers";
 
@@ -19,7 +19,7 @@ import { verifyTwoFactorCode, decryptSecret } from "@/lib/2fa";
 import { redirect } from "next/navigation";
 
 const loginSchema = z.object({
-  email: z.string().email("Geçerli bir e-posta girin."),
+  email: z.string().min(1, "E-posta veya kullanıcı adı zorunludur."),
   password: z.string().min(1, "Şifre zorunludur."),
   rememberMe: z.coerce.boolean().optional(),
 });
@@ -52,7 +52,7 @@ export async function loginAction(
 
   try {
     const db = getDb();
-    const user = await db.query.users.findFirst({ where: eq(users.email, email) });
+    const user = await db.query.users.findFirst({ where: or(eq(users.email, email), eq(users.name, email)) });
 
     if (!user || user.status !== "active") {
       throw new AppError("UNAUTHORIZED", "E-posta veya şifre hatalı.", 401);
@@ -106,7 +106,7 @@ export async function loginAction(
     const userAgent = headersList.get("user-agent") ?? undefined;
     const ipAddress = headersList.get("x-forwarded-for") ?? "127.0.0.1";
 
-    const token = await createSession(user.id, userAgent, ipAddress);
+    const token = await createSession(user.id, userAgent, ipAddress, rememberMe ?? false);
     await setSessionCookie(token, rememberMe ?? false);
   } catch (err) {
     if (err instanceof AppError) {
@@ -157,7 +157,7 @@ export async function verifyTwoFactorAction(
     const userAgent = headersList.get("user-agent") ?? undefined;
     const ipAddress = headersList.get("x-forwarded-for") ?? "127.0.0.1";
 
-    const token = await createSession(user.id, userAgent, ipAddress);
+    const token = await createSession(user.id, userAgent, ipAddress, rememberMe);
     await setSessionCookie(token, rememberMe);
     cookieStore.delete(PENDING_2FA_COOKIE);
   } catch (err) {

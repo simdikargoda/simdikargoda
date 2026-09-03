@@ -1,11 +1,11 @@
 import { PageHeader } from "@/components/ui/page-header";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { NewUserForm } from "./new-user-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function YeniKullaniciOlusturPage() {
-  await requireStaff();
+  await requireAdmin();
 
   return (
     <div className="space-y-6 fade-in-up">

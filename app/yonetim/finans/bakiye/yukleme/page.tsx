@@ -1,5 +1,5 @@
 import BalanceTransactionsPage from "@/components/finance/balance-transactions-page";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +9,6 @@ export const dynamic = "force-dynamic";
  * onaylanmadan bakiye aktifleşmez. Tekrar eden veri gösterilmez.
  */
 export default async function BakiyeYuklemePage() {
-  await requireStaff();
+  await requireAdmin();
   return <BalanceTransactionsPage />;
 }

@@ -3,7 +3,7 @@ import { listShipments } from "@/lib/services/tracking/tracking.service";
 import { ShipmentStatusBadge } from "@/components/ui/shipment-status-badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatKurus } from "@/lib/money";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { NewShipmentButton } from "./new-shipment-button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -15,7 +15,7 @@ export default async function KargoPage({
 }: {
   searchParams: Promise<{ status?: string; q?: string }>;
 }) {
-  await requireStaff();
+  await requireAdmin();
   const params = await searchParams;
   const shipments = await listShipments({
     status: params.status,

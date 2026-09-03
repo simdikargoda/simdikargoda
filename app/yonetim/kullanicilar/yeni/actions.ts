@@ -4,9 +4,8 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { getDb } from "@/db/client";
 import { users } from "@/db/schema/auth";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { eq } from "drizzle-orm";
-import { AppError } from "@/lib/errors";
 
 const newUserSchema = z.object({
   name: z.string().min(2, "İsim en az 2 karakter olmalıdır"),
@@ -24,7 +23,7 @@ export async function createUserAction(
   _prev: NewUserState,
   formData: FormData
 ): Promise<NewUserState> {
-  await requireStaff(); // Only admins can create users
+  await requireAdmin(); // Only admins can create users
   
   const parsed = newUserSchema.safeParse({
     name: formData.get("name"),

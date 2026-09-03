@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { SidebarLayout } from "@/components/layout/sidebar-layout";
 import { PanelHeader } from "@/components/layout/panel-header";
 import { getDb } from "@/db/client";
@@ -9,7 +9,7 @@ export default async function YonetimLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   // Yönetici/operasyon erişimi zorunlu.
-  const session = await requireStaff();
+  const session = await requireAdmin();
 
   const db = getDb();
   const user = await db.query.users.findFirst({

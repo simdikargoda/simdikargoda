@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { requireStaff } from "@/lib/guard";
+import { requireAdmin } from "@/lib/guard";
 import { getAuditLogs } from "@/lib/services/finance/audit.service";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * (secret/token/şifre/MFA secret) loglanması sistem tarafından engellenir.
  */
 export default async function AuditLoglarPage({ title, description }: { title: string; description: string }) {
-  await requireStaff();
+  await requireAdmin();
   const logs = await getAuditLogs(100);
 
 
